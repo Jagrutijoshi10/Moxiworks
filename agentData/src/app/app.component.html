@@ -1,0 +1,91 @@
+<div class="jumbotron">
+    <header class="container">
+        <h1 class="center">WELCOME TO MOXI-WORKS</h1>
+        <div class="right">
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText" name="searchText">
+                <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+        </div>
+
+    </header><br />
+    <div class="center">
+        <span *ngFor="let index of pages">
+            <button class="btn btn-outline-dark" (click)="getnextpages(index)"
+                [ngClass]="currentPage === index ? 'active' : ''">
+                {{ index + 1 }}
+            </button>
+        </span>
+    </div>
+    <br /><br />
+
+    <body>
+        <!-- <ngx-ui-loader></ngx-ui-loader> -->
+        <ngx-spinner></ngx-spinner>
+
+        <div class="pagination justify-content-center">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Agent ID</th>
+                        <th>Client Office ID</th>
+                        <th> Name</th>
+                        <th>Email ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let agent of agents  | filter:  searchText" (click)="getalldata(agent)"
+                        [ngClass]="!selectedAgent ? 'active' : ''" data-toggle="modal" data-target="#myModal">
+                        <div *ngIf="agents.length===0">No Data Found</div><td>
+                            <b>{{ agent.moxi_works_agent_id }}</b>
+                        </td>
+                        <td>{{ agent.client_office_id}}</td>
+                        <td>{{ agent.name }}</td>
+                        <td>{{ agent.primary_email_address }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+    <footer class="center">
+        <span *ngFor="let index of pages">
+            <button class="btn btn-outline-dark" (click)="getnextpages(index)"
+                [ngClass]="currentPage === index ? 'active' : ''">
+                {{ index + 1 }}
+            </button>
+        </span>
+    </footer>
+</div>
+<router-outlet></router-outlet>
+
+<!-- The Modal -->
+
+<div class="modal" id="myModal">
+    <div class="container">
+        <div class="modal-dialog">
+            <div class="modal-dialog modal-xl">
+                <div class="scrollbar">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">{{ agentName }}</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body" class="white-space-pre">
+                            {{details | json}}
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

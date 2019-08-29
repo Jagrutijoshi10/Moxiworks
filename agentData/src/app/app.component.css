@@ -1,0 +1,21 @@
+.white-space-pre {
+    white-space: pre-wrap;
+}
+.center{
+    text-align: center
+}
+tr:nth-child(even) {
+    background-color: lightgrey;
+}
+tr:nth-child(odd) {
+    background-color:white;
+}
+.scrollbar {
+    width: 700px;
+    height: 700px;
+   
+    overflow: auto;
+  }
+  .right{
+    float: right;
+}
