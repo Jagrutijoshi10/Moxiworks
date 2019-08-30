@@ -16,23 +16,21 @@ module.exports=function (err){
     let self={};
     self.getdata =(req, res) => {
         let url1 = 'https://api.moxiworks.com/api/agents/?';
-        data = JSON.stringify(req.body);
-        for (i = 0; i < data.length; i++) {
+        let data = JSON.stringify(req.body);
+        for (let i = 0; i < data.length; i++) {
             data = data.replace(',', '&');
             data = data.replace(':', '=');
             data = data.replace('{', '');
             data = data.replace('}', '');
             data = data.replace('"', '');
         }
-         url = "url";
+         let url = "url";
         let value = url1 + data;
         options.url = value;
         //    console.log(typeof(data))  
         request(options, function (err, response, body) {
             res.send(body);
-        }).catch(error => {
-            console.log(error);
-          });
+        })
     }
    return self;     
 }();

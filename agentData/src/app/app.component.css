@@ -4,16 +4,30 @@
 .center{
     text-align: center
 }
+tr,.fontSize{
+    font-size: 15px;
+}
+.headerSize{
+    font-size: 25px;
+}
 tr:nth-child(even) {
     background-color: lightgrey;
+  
 }
 tr:nth-child(odd) {
     background-color:white;
+    
+}
+.topHeader{
+    font-size:40px;
+}
+.indexSize{
+    font-size: 18px;
 }
 .scrollbar {
     width: 700px;
     height: 700px;
-   
+    position:relative;
     overflow: auto;
   }
   .right{
