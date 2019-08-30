@@ -1,25 +1,52 @@
-
-<!-- <ng-template #log> -->
 <div class="jumbotron">
     <header class="container">
-        <h1 class="center"><div class="topHeader">WELCOME TO MOXI-WORKS</div></h1>
+        <h1 class="center">
+            <div class="topHeader">WELCOME TO MOXI-WORKS</div>
+        </h1>
+    </header><br />
+    <div>
+        <div class="center">
+            <span *ngFor="let index of pages">
+                <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
+                    [ngClass]="currentPage === index ? 'active' : ''">
+                    <div class="indexSize"> {{ index + 1 }}</div>
+                </button>
+            </span>
+        </div>
         <div class="right">
             <div class="form-group has-feedback">
                 <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText" name="searchText">
                 <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
             </div>
         </div>
-    </header><br />
-    <div class="center">
-        <span *ngFor="let index of pages">
-            <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
-                [ngClass]="currentPage === index ? 'active' : ''">
-                    <div class="indexSize">  {{ index + 1 }}</div>
-            </button>
-        </span>
     </div>
     <br /><br />
-
+    <div class="center" class="container">
+        <form [formGroup]="formdata" (ngSubmit)="getFirstData(formdata.value)">
+            <table class="jumbotron">
+                <tr>
+                    <td>Enter the moxi works company id:<input type="text" id="id" [(ngModel)]="companyId"
+                            name="companyId" formControlName="companyId" /></td>
+                </tr>
+                <tr class="normal">
+                    <td>Enter the page number:<input type="text" id="pageNumber" [(ngModel)]="pageNumber"
+                            name="pageNumber" formControlName="pageNumber" /></td>
+                </tr>
+                <tr>
+                    <td>Enter the value of updated since:<input type="text" id="updatedSince" [(ngModel)]="updatedSince"
+                            name="updatedSince" formControlName="updatedSince" /></td>
+                </tr>
+                <tr class="normal">
+                    <td>Enter the moxi works agent id:<input type="text" id="agentId" [(ngModel)]="agentId"
+                            name="agentId" formControlName="agentId" /></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" [disabled]="!formdata.valid" class="forsubmit" value="Submit"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    
     <body>
         <ngx-spinner></ngx-spinner>
         <div class="pagination justify-content-center">
@@ -34,7 +61,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let agent of agents  | filter:  searchText" (click)="getalldata(agent)"
-                         data-toggle="modal" data-target="#myModal">
+                        data-toggle="modal" data-target="#myModal">
                         <div *ngIf="agents.length===0">No Data Found</div>
                         <td>
                             <b>{{ agent.moxi_works_agent_id }}</b>
@@ -47,18 +74,14 @@
             </table>
         </div>
     </body>
-
     <footer class="center">
         <span *ngFor="let index of pages"> <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
-            [ngClass]="currentPage === index ? 'active' : ''">
-            <div class="indexSize"> {{ index + 1 }}</div>
-        </button>
-           
+                [ngClass]="currentPage === index ? 'active' : ''">
+                <div class="indexSize"> {{ index + 1 }}</div>
+            </button>
         </span>
     </footer>
-
 </div>
-<!-- </ng-template> -->
 <router-outlet></router-outlet>
 
 <!-- The Modal -->
@@ -71,26 +94,21 @@
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
-
                             <h4 class="modal-title"><b>
                                     <div class="headerSize">{{ agentName }}</div>
                                 </b></h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-
                         </div>
-
-
                         <!-- Modal body -->
                         <div class="modal-body" class="white-space-pre">
                             <div class="fontSize">{{details | json}}</div>
-
                         </div>
-
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-dark" data-dismiss="modal"><div class="fontSize">Close</div></button>
+                            <button type="button" class="btn btn-dark" data-dismiss="modal">
+                                <div class="fontSize">Close</div>
+                            </button>
                         </div>
-
                     </div>
                 </div>
             </div>

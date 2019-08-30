@@ -18,6 +18,12 @@ tr:nth-child(odd) {
     background-color:white;
     
 }
+tr.normal{
+    background-color: white
+}
+.container{
+    clear: both;
+}
 .topHeader{
     font-size:40px;
 }
