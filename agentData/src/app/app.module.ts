@@ -16,7 +16,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     NgxSpinnerModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     Ng2SearchPipeModule
   ],
   providers: [],

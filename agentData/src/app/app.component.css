@@ -2,7 +2,7 @@
     white-space: pre-wrap;
 }
 .center{
-    text-align: center
+    text-align: center;
 }
 tr,.fontSize{
     font-size: 15px;
@@ -21,9 +21,6 @@ tr:nth-child(odd) {
 tr.normal{
     background-color: white;
 }
-.container{
-    clear: both;
-}
 .topHeader{
     font-size:40px;
 }
@@ -37,8 +34,11 @@ tr.normal{
     overflow: auto;
   }
   .right{
-    float: right
+    float: right;
 }
 .alignright{
-    text-align: left
+    text-align: left;
+}
+form{
+    width: 100%
 }

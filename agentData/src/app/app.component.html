@@ -3,49 +3,61 @@
         <h1 class="center">
             <div class="topHeader">WELCOME TO MOXI-WORKS</div>
         </h1>
-   <br/><br/>
-    <div>
-        <div class="center">
-            <span *ngFor="let index of pages">
-                <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
-                    [ngClass]="currentPage === index ? 'active' : ''">
-                    <div class="indexSize"> {{ index + 1 }}</div>
-                </button>
-            </span>
-        </div>
-        <div class="right">
-            <div class="form-group has-feedback">
-                <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText" name="searchText">
-                <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
+        <br /><br />
+        <div>
+            <div class="right">
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText"
+                        name="searchText">
+                    <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+                <br /><br />
+                <div >
+                    <form [formGroup]="formdata" (ngSubmit)="getParams(formdata.value)">
+                        <table class="jumbotron">
+                            <div class="form-group"><tr>
+                                    <td><label>Enter the moxi works company id:</label></td>
+                                    <td><input type="text" id="id" class="form-control"  [(ngModel)]="companyId" name="companyId"
+                                            formControlName="companyId" /></td>
+                                </tr></div>
+                            
+                                <div class="form-group"><tr class="normal">
+                                <td><label>Enter the page number:</label></td>
+                                <td><input type="text" id="pageNumber" class="form-control" [(ngModel)]="pageNumber" name="pageNumber"
+                                        formControlName="pageNumber" /></td>
+                            </tr></div>
+                            <div class="form-group"><tr>
+                                <td><label>Enter the value of updated since:</label></td>
+                                <td><input type="text" id="updatedSince" class="form-control" [(ngModel)]="updatedSince" name="updatedSince"
+                                        formControlName="updatedSince" /></td>
+                            </tr></div>
+                            <div class="form-group"><tr class="normal">
+                                <td><label>Enter the moxi works agent id:</label></td>
+                                <td><input type="text" id="agentId" class="form-control" [(ngModel)]="agentId" name="agentId"
+                                        formControlName="agentId" /></td>
+                            </tr></div>
+                            <tr class="center">
+                                <td><button type="submit" class="btn btn-primary" [disabled]="!formdata.valid">submit</button>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
             </div>
-    <br /><br />
-    <div class="align-right">
-        <form [formGroup]="formdata" (ngSubmit)="getFirstData(formdata.value)">
-            <table>
-                <tr>
-                    <td>Enter the moxi works company id:</td><td><input type="text" id="id" [(ngModel)]="companyId"
-                            name="companyId" formControlName="companyId" /></td>
-                </tr>
-                <tr class="normal">
-                    <td>Enter the page number:</td><td><input type="text" id="pageNumber" [(ngModel)]="pageNumber"
-                            name="pageNumber" formControlName="pageNumber" /></td>
-                </tr>
-                <tr>
-                    <td>Enter the value of updated since:</td><td><input type="text" id="updatedSince" [(ngModel)]="updatedSince"
-                            name="updatedSince" formControlName="updatedSince" /></td>
-                </tr>
-                <tr class="normal">
-                    <td>Enter the moxi works agent id:</td><td><input type="text" id="agentId" [(ngModel)]="agentId"
-                            name="agentId" formControlName="agentId" /></td>
-                </tr>
-                <tr class="center">
-                    <td><input type="submit" [disabled]="!formdata.valid" class="forsubmit" value="Submit"></td><td></td>
-                </tr>
-            </table>
-        </form>
-    </div>
-</div>  </div> </header><br />
+            
+        </div>
+    </header><br />
+
     <body>
+            <div class="center">
+                    <span *ngFor="let index of pages">
+                        <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
+                            [ngClass]="currentPage === index ? 'active' : ''">
+                            <div class="indexSize"> {{ index + 1 }}</div>
+                        </button>
+                    </span>
+                </div>
         <ngx-spinner></ngx-spinner>
         <div class="pagination justify-content-center">
             <table class="table table-bordered">
@@ -58,7 +70,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let agent of agents  | filter:  searchText" (click)="getalldata(agent)"
+                    <tr *ngFor="let agent of agents  | filter:  searchText" (click)="getAgentLog(agent)"
                         data-toggle="modal" data-target="#myModal">
                         <div *ngIf="agents.length===0">No Data Found</div>
                         <td>

@@ -1,4 +1,3 @@
-
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from "@angular/router";
@@ -18,10 +17,10 @@ export class AppComponent implements OnInit {
     public searchText: string;
     details: any;
     selectedAgent = false;
-    companyId: any='moxi_works';
-    pageNumber: any='1';
-    updatedSince: any='1461108284';
-    agentId: any='demo_4@moxiworks.com';
+    companyId: any = 'moxi_works';
+    pageNumber: any = '1';
+    updatedSince: any = '1461108284';
+    agentId: any = 'demo_4@moxiworks.com';
     formdata;
     isClicked = false;
     data: any = {
@@ -60,12 +59,12 @@ export class AppComponent implements OnInit {
             this.spinner.hide();
         })
     }
-    getFirstData(info) {
-        this.isClicked = true
-        this.data.moxi_works_company_id = info.companyId
-        this.data.page_number= info.pageNumber
-        this.data.updated_since = info.updatedSince
-        this.data.moxi_works_agent_id = info.agentId
+    getParams(info) {
+        this.isClicked = true;
+        this.data.moxi_works_company_id = info.companyId;
+        this.data.page_number = info.pageNumber;
+        this.data.updated_since = info.updatedSince;
+        this.data.moxi_works_agent_id = info.agentId;
         // console.log(this.data)
         this.spinner.show();
         this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
@@ -74,7 +73,7 @@ export class AppComponent implements OnInit {
             this.spinner.hide();
         })
     }
-    getalldata(agent) {
+    getAgentLog(agent) {
         this.selectedAgent = !this.selectedAgent;
         this.details = agent;
         this.agentName = this.details.name;
