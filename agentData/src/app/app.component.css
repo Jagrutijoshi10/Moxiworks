@@ -19,7 +19,7 @@ tr:nth-child(odd) {
     
 }
 tr.normal{
-    background-color: white
+    background-color: white;
 }
 .container{
     clear: both;
@@ -37,5 +37,8 @@ tr.normal{
     overflow: auto;
   }
   .right{
-    float: right;
+    float: right
+}
+.alignright{
+    text-align: left
 }

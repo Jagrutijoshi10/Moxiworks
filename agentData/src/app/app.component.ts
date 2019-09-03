@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     isClicked = false;
     data: any = {
         moxi_works_company_id: 'moxi_works',
-        page_number: '',
+        page_number: '1',
         updated_since: '1461108284',
         moxi_works_agent_id: 'demo_4@moxiworks.com'
     };
@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
         this.spinner.show();
         this.currentPage = i;
         this.data.page_number = this.currentPage + 1;
-        console.log(this.data)
+        // console.log(this.data)
         this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
             this.log = agent_data;
             this.agents = this.log.agents;
@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
         this.data.page_number= info.pageNumber
         this.data.updated_since = info.updatedSince
         this.data.moxi_works_agent_id = info.agentId
-        console.log(this.data)
+        // console.log(this.data)
         this.spinner.show();
         this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
             this.log = agent_data;
@@ -78,6 +78,6 @@ export class AppComponent implements OnInit {
         this.selectedAgent = !this.selectedAgent;
         this.details = agent;
         this.agentName = this.details.name;
-        console.log(typeof (this.details));
+        // console.log(typeof (this.details));
     }
 }

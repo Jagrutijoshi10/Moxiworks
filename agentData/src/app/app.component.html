@@ -3,7 +3,7 @@
         <h1 class="center">
             <div class="topHeader">WELCOME TO MOXI-WORKS</div>
         </h1>
-    </header><br />
+   <br/><br/>
     <div>
         <div class="center">
             <span *ngFor="let index of pages">
@@ -18,35 +18,33 @@
                 <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText" name="searchText">
                 <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
             </div>
-        </div>
-    </div>
     <br /><br />
-    <div class="center" class="container">
+    <div class="align-right">
         <form [formGroup]="formdata" (ngSubmit)="getFirstData(formdata.value)">
-            <table class="jumbotron">
+            <table>
                 <tr>
-                    <td>Enter the moxi works company id:<input type="text" id="id" [(ngModel)]="companyId"
+                    <td>Enter the moxi works company id:</td><td><input type="text" id="id" [(ngModel)]="companyId"
                             name="companyId" formControlName="companyId" /></td>
                 </tr>
                 <tr class="normal">
-                    <td>Enter the page number:<input type="text" id="pageNumber" [(ngModel)]="pageNumber"
+                    <td>Enter the page number:</td><td><input type="text" id="pageNumber" [(ngModel)]="pageNumber"
                             name="pageNumber" formControlName="pageNumber" /></td>
                 </tr>
                 <tr>
-                    <td>Enter the value of updated since:<input type="text" id="updatedSince" [(ngModel)]="updatedSince"
+                    <td>Enter the value of updated since:</td><td><input type="text" id="updatedSince" [(ngModel)]="updatedSince"
                             name="updatedSince" formControlName="updatedSince" /></td>
                 </tr>
                 <tr class="normal">
-                    <td>Enter the moxi works agent id:<input type="text" id="agentId" [(ngModel)]="agentId"
+                    <td>Enter the moxi works agent id:</td><td><input type="text" id="agentId" [(ngModel)]="agentId"
                             name="agentId" formControlName="agentId" /></td>
                 </tr>
-                <tr>
-                    <td><input type="submit" [disabled]="!formdata.valid" class="forsubmit" value="Submit"></td>
+                <tr class="center">
+                    <td><input type="submit" [disabled]="!formdata.valid" class="forsubmit" value="Submit"></td><td></td>
                 </tr>
             </table>
         </form>
     </div>
-    
+</div>  </div> </header><br />
     <body>
         <ngx-spinner></ngx-spinner>
         <div class="pagination justify-content-center">
