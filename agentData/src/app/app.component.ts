@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
     agents = [];
     log;
     agentName;
+    message="no data";
     pages = [];
     currentPage = 0;
     public searchText: string;
@@ -31,11 +32,12 @@ export class AppComponent implements OnInit {
     };
     constructor(private _http: HttpClient, private _route: ActivatedRoute, private _router: Router, private spinner: NgxSpinnerService) { }
     ngOnInit() {
+      
         this.formdata = new FormGroup({
-            companyId: new FormControl(""),
-            pageNumber: new FormControl(""),
-            updatedSince: new FormControl(""),
-            agentId: new FormControl("")
+            companyId: new FormControl("",Validators.required),
+            pageNumber: new FormControl("",Validators.required),
+            updatedSince: new FormControl("",Validators.required),
+            agentId: new FormControl("",Validators.required)
         });
         this.spinner.show();
         this._http.post(`http://localhost:3000/api/data`, this.data).subscribe(agent_data => {
@@ -50,17 +52,23 @@ export class AppComponent implements OnInit {
     }
     getnextpages(i) {
         this.spinner.show();
-        this.currentPage = i;
-        this.data.page_number = this.currentPage + 1;
-        // console.log(this.data)
-        this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
-            this.log = agent_data;
-            this.agents = this.log.agents;
-            this.spinner.hide();
-        })
+        if(this.currentPage==i){
+           this.spinner.hide();
+        }else{
+            this.currentPage = i;
+            this.data.page_number = this.currentPage + 1;
+            // console.log(this.data)
+            this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
+                this.log = agent_data;
+                this.agents = this.log.agents;
+                this.spinner.hide();
+            })
+        }
+       
     }
     getParams(info) {
         this.isClicked = true;
+        
         this.data.moxi_works_company_id = info.companyId;
         this.data.page_number = info.pageNumber;
         this.data.updated_since = info.updatedSince;

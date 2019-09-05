@@ -28,7 +28,7 @@ tr.normal{
     font-size: 18px;
 }
 .scrollbar {
-    width: 700px;
+    width: 495px;
     height: 700px;
     position:relative;
     overflow: auto;
@@ -41,4 +41,8 @@ tr.normal{
 }
 form{
     width: 100%
+}
+.errorMessage{
+color: red;
+font-size: 20px;
 }
