@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
     agentId: any = 'demo_4@moxiworks.com';
     formdata;
     isClicked = false;
+    isClick=false;
     data: any = {
         moxi_works_company_id: 'moxi_works',
         page_number: '1',
@@ -32,7 +33,7 @@ export class AppComponent implements OnInit {
     };
     constructor(private _http: HttpClient, private _route: ActivatedRoute, private _router: Router, private spinner: NgxSpinnerService) { }
     ngOnInit() {
-      
+        // this.isClick = false;
         this.formdata = new FormGroup({
             companyId: new FormControl("",Validators.required),
             pageNumber: new FormControl("",Validators.required),
@@ -51,6 +52,7 @@ export class AppComponent implements OnInit {
         })
     }
     getnextpages(i) {
+        this.isClick = true;
         this.spinner.show();
         if(this.currentPage==i){
            this.spinner.hide();
@@ -64,7 +66,6 @@ export class AppComponent implements OnInit {
                 this.spinner.hide();
             })
         }
-       
     }
     getParams(info) {
         this.isClicked = true;

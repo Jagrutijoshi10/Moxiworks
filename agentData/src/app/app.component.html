@@ -11,50 +11,49 @@
                         <div class="col-xl-6">
                             <label>Enter the moxi works company id:</label>
                             <input type="text" id="id" class="form-control" [(ngModel)]="companyId" name="companyId"
-                               required formControlName="companyId" />
-                               <div *ngIf="companyId!='moxi_works'" class="errorMessage">
+                                required formControlName="companyId" />
+                            <div *ngIf="companyId!='moxi_works'" class="errorMessage">
                                 <p>Company id is incorrect</p>
-                              </div>
-    
+                            </div>
+
                         </div>
-                       
+
                         <div class="col-xl-6">
 
                             <label>Enter the page number:</label>
-                            <input type="text" id="pageNumber" class="form-control" [(ngModel)]="pageNumber" 
-                               required name="pageNumber" formControlName="pageNumber"   />
-                
-                               <div *ngIf="pageNumber!='1' && pageNumber!='2'" class="errorMessage">
+                            <input type="text" id="pageNumber" class="form-control" [(ngModel)]="pageNumber" required
+                                name="pageNumber" formControlName="pageNumber" />
+
+                            <div *ngIf="pageNumber!='1' && pageNumber!='2'" class="errorMessage">
                                 <p>Page Number is incorrect</p>
-                              </div>
+                            </div>
                         </div>
-                       
+
                     </div>
                     <div class="row">
                         <div class="col-xl-6">
                             <label>Enter the value of updated since:</label>
                             <input type="text" id="updatedSince" class="form-control" [(ngModel)]="updatedSince"
-                               required name="updatedSince" formControlName="updatedSince" />
-                               
-                               <div *ngIf="updatedSince!='1461108284'" class="errorMessage">
+                                required name="updatedSince" formControlName="updatedSince" />
+
+                            <div *ngIf="updatedSince!='1461108284'" class="errorMessage">
                                 <p>Value of updated since is incorrect</p>
-                              </div>
+                            </div>
                         </div>
-                        
+
                         <div class="col-xl-6">
                             <label>Enter the moxi works agent id:</label>
                             <input type="text" id="agentId" class="form-control" [(ngModel)]="agentId" name="agentId"
-                               required formControlName="agentId" /><br /></div>
-                               
-                              <div *ngIf="agentId!='demo_4@moxiworks.com'" class="errorMessage">
-                                <p>Agent id is incorrect</p>
-                              </div>
+                                required formControlName="agentId" /><br />
+
+                        <div *ngIf="agentId!='demo_4@moxiworks.com'" class="errorMessage">
+                            <p>Agent id is incorrect</p>
+                        </div></div>
                     </div>
-                    <div *ngIf="!formdata.valid" class="center">
+                    <!-- <div *ngIf="!formdata.valid" class="center">
                         <p class="errorMessage">Data is required</p>
-                      </div>
-                    <div class="center"> <button type="submit" class="btn btn-primary btn-lg"
-                           >submit</button></div>
+                      </div> -->
+                    <div class="center"> <button type="submit" class="btn btn-primary btn-lg">submit</button></div>
                 </form>
             </div>
         </div><br /><br />
@@ -64,12 +63,11 @@
         </div>
         <div class="center">
             <span *ngFor="let index of pages">
-                <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)" 
-                    [ngClass]="currentPage && (pageNumber-1)=== index ? 'active' : ''" >
-                    <div class="indexSize"> {{ index + 1 }}</div>
+                <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)" data-toggle="modal" data-target="#myModals"
+                [ngClass]="(currentPage=== index) && !isClicked ? 'active' : '' || (pageNumber-1)===index && isClicked ?'active':'' "  >
+                    <div   class="indexSize"> {{ index + 1 }}</div>
                 </button>
             </span>
-            <p>{{ (pageNumber-1)  }}</p>
         </div>
     </header><br />
 
@@ -88,7 +86,7 @@
                 <tbody>
                     <tr *ngFor="let agent of agents  | filter:  searchText" (click)="getAgentLog(agent)"
                         data-toggle="modal" data-target="#myModal">
-                        <!-- <div *ngIf="agents.length===0">No Data Found</div> -->
+                       
                         <td>
                             <b>{{ agent.moxi_works_agent_id }}</b>
                         </td>
@@ -99,16 +97,16 @@
                 </tbody>
             </table>
         </div>
+        <div>
+            <span *ngIf="(agents | filter: searchText).length === 0"><p class="center">"No Exact matches"</p></span>
+
+        </div>
     </body>
     <footer class="center">
-        <span *ngFor="let index of pages"> <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
-                [ngClass]="currentPage === index ? 'active' : ''">
+        <span *ngFor="let index of pages"> <button class="btn btn-outline-dark btn-lg"  (click)="getnextpages(index)"
+            [ngClass]="(currentPage=== index) && !isClicked ? 'active' : '' || (pageNumber-1)===index && isClicked ?'active':'' ">
                 <div class="indexSize"> {{ index + 1 }}</div>
             </button>
-            <div *ngIf='currentPage === index'>
-                <span  data-toggle="modal" data-target="#myModal"></span>
-            </div>
-    
         </span>
     </footer>
 </div>
@@ -131,9 +129,10 @@
                         </div>
                         <!-- Modal body -->
                         <div class="scrollbar">
-                        <div class="modal-body" class="white-space-pre">
-                            <div class="fontSize">{{details | json}}</div>
-                        </div></div>
+                            <div class="modal-body" class="white-space-pre">
+                                <div class="fontSize">{{details | json}}</div>
+                            </div>
+                        </div>
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-dark" data-dismiss="modal">
@@ -149,7 +148,7 @@
 </div>
 
 
-
+<!-- 
 
 <div class="modal" id="myModals">
     <div class="container">
@@ -157,19 +156,20 @@
             <div class="modal-dialog modal-sm">
                 <div>
                     <div class="modal-content">
-                        <!-- Modal Header -->
+                     
                         <div class="modal-header">
                             <h4 class="modal-title"><b>
-                                    <div class="headerSize">Alert Message</div>
+                                    <div class="headerSize">Alert message</div>
                                 </b></h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-                        <!-- Modal body -->
+                      
                         <div class="scrollbar">
-                        <div class="modal-body" class="white-space-pre">
-                            <div class="fontSize"><p>Data is already loaded</p></div>
-                        </div></div>
-                        <!-- Modal footer -->
+                            <div class="modal-body" class="white-space-pre">
+                                <div class="fontSize"><p>Data Already loaded</p></div>
+                            </div>
+                        </div>
+                       
                         <div class="modal-footer">
                             <button type="button" class="btn btn-dark" data-dismiss="modal">
                                 <div class="fontSize">Close</div>
@@ -182,3 +182,5 @@
     </div>
 
 </div>
+ -->
+
