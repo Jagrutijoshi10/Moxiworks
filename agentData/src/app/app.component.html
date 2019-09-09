@@ -61,9 +61,9 @@
             <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText" name="searchText">
             <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
         </div>
-        <div class="center">
+        <div class="center" *ngIf="((agents | filter: searchText).length )!= 0">
             <span *ngFor="let index of pages">
-                <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)" data-toggle="modal" data-target="#myModals"
+                <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
                 [ngClass]="(currentPage=== index) && !isClicked ? 'active' : '' || (pageNumber-1)===index && isClicked ?'active':'' "  >
                     <div   class="indexSize"> {{ index + 1 }}</div>
                 </button>
@@ -102,9 +102,9 @@
 
         </div>
     </body>
-    <footer class="center">
+    <footer class="center" *ngIf="((agents | filter: searchText).length )!= 0">
         <span *ngFor="let index of pages"> <button class="btn btn-outline-dark btn-lg"  (click)="getnextpages(index)"
-            [ngClass]="(currentPage=== index) && !isClicked ? 'active' : '' || (pageNumber-1)===index && isClicked ?'active':'' ">
+            [ngClass]="(currentPage=== index)  ? 'active' : '' || (pageNumber-1)===index && isClicked ? 'active':'' ">
                 <div class="indexSize"> {{ index + 1 }}</div>
             </button>
         </span>
@@ -147,40 +147,4 @@
 
 </div>
 
-
-<!-- 
-
-<div class="modal" id="myModals">
-    <div class="container">
-        <div class="modal-dialog">
-            <div class="modal-dialog modal-sm">
-                <div>
-                    <div class="modal-content">
-                     
-                        <div class="modal-header">
-                            <h4 class="modal-title"><b>
-                                    <div class="headerSize">Alert message</div>
-                                </b></h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                      
-                        <div class="scrollbar">
-                            <div class="modal-body" class="white-space-pre">
-                                <div class="fontSize"><p>Data Already loaded</p></div>
-                            </div>
-                        </div>
-                       
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-dark" data-dismiss="modal">
-                                <div class="fontSize">Close</div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
- -->
 

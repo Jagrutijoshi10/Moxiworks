@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     agentId: any = 'demo_4@moxiworks.com';
     formdata;
     isClicked = false;
-    isClick=false;
+  
     data: any = {
         moxi_works_company_id: 'moxi_works',
         page_number: '1',
@@ -33,12 +33,12 @@ export class AppComponent implements OnInit {
     };
     constructor(private _http: HttpClient, private _route: ActivatedRoute, private _router: Router, private spinner: NgxSpinnerService) { }
     ngOnInit() {
-        // this.isClick = false;
+        
         this.formdata = new FormGroup({
-            companyId: new FormControl("",Validators.required),
-            pageNumber: new FormControl("",Validators.required),
-            updatedSince: new FormControl("",Validators.required),
-            agentId: new FormControl("",Validators.required)
+            companyId: new FormControl(""),
+            pageNumber: new FormControl(""),
+            updatedSince: new FormControl(""),
+            agentId: new FormControl("")
         });
         this.spinner.show();
         this._http.post(`http://localhost:3000/api/data`, this.data).subscribe(agent_data => {
@@ -52,13 +52,39 @@ export class AppComponent implements OnInit {
         })
     }
     getnextpages(i) {
-        this.isClick = true;
         this.spinner.show();
+        
         if(this.currentPage==i){
-           this.spinner.hide();
+            // this.pageNumber=i+1;
+            // this.currentPage = i;
+            this.spinner.hide();
         }else{
+            this.isClicked =!this.isClicked;            
             this.currentPage = i;
             this.data.page_number = this.currentPage + 1;
+            // console.log(this.data)
+            this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
+                this.log = agent_data;
+                this.agents = this.log.agents;
+                this.pageNumber=i+1;
+                this.spinner.hide();
+            })
+        }
+
+        
+    }
+    getParams(info) {
+        
+        this.spinner.show();
+        if(this.currentPage==(info.pageNumber-1)){
+           this.spinner.hide();
+        }
+        else{
+            this.currentPage=info.pageNumber-1;
+            this.data.moxi_works_company_id = info.companyId;
+            this.data.page_number = info.pageNumber;
+            this.data.updated_since = info.updatedSince;
+            this.data.moxi_works_agent_id = info.agentId;
             // console.log(this.data)
             this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
                 this.log = agent_data;
@@ -66,21 +92,7 @@ export class AppComponent implements OnInit {
                 this.spinner.hide();
             })
         }
-    }
-    getParams(info) {
-        this.isClicked = true;
-        
-        this.data.moxi_works_company_id = info.companyId;
-        this.data.page_number = info.pageNumber;
-        this.data.updated_since = info.updatedSince;
-        this.data.moxi_works_agent_id = info.agentId;
-        // console.log(this.data)
-        this.spinner.show();
-        this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
-            this.log = agent_data;
-            this.agents = this.log.agents;
-            this.spinner.hide();
-        })
+       
     }
     getAgentLog(agent) {
         this.selectedAgent = !this.selectedAgent;
