@@ -44,8 +44,9 @@ export class AppComponent implements OnInit {
         this._http.post(`http://localhost:3000/api/data`, this.data).subscribe(agent_data => {
             // console.log(this.data)
             this.log = agent_data;
-            this.agents = this.log.agents;
-            for (var i = 0; i < this.log.total_pages; i++) {
+            this.agents = this.log.res;
+            // console.log(this.agents)
+            for (var i = 0; i < this.log.pages; i++) {
                 this.pages.push(i);
             }
             this.spinner.hide();
@@ -65,7 +66,7 @@ export class AppComponent implements OnInit {
             // console.log(this.data)
             this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
                 this.log = agent_data;
-                this.agents = this.log.agents;
+                this.agents = this.log.res;
                 this.pageNumber=i+1;
                 this.spinner.hide();
             })
@@ -88,7 +89,7 @@ export class AppComponent implements OnInit {
             // console.log(this.data)
             this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
                 this.log = agent_data;
-                this.agents = this.log.agents;
+                this.agents = this.log.res;
                 this.spinner.hide();
             })
         }
