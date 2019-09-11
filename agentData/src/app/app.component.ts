@@ -18,6 +18,10 @@ export class AppComponent implements OnInit {
     public searchText: string;
     details: any;
     selectedAgent = false;
+    start: any;
+    end: any;
+    limit: any = 10;
+
     companyId: any = 'moxi_works';
     pageNumber: any = '1';
     updatedSince: any = '1461108284';
@@ -41,12 +45,14 @@ export class AppComponent implements OnInit {
             agentId: new FormControl("")
         });
         this.spinner.show();
-        this._http.post(`http://localhost:3000/api/data`, this.data).subscribe(agent_data => {
-            // console.log(this.data)
+        this._http.post(`http://localhost:3000/api/data`, this.data).subscribe(() => {
+            this.spinner.hide();
+        })
+        this._http.get(`http://localhost:3000/api/records?start=0&end=${this.limit}`).subscribe(agent_data=>{
             this.log = agent_data;
             this.agents = this.log.res;
-            // console.log(this.agents)
-            for (var i = 0; i < this.log.pages; i++) {
+            console.log(this.agents)
+             for (var i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
                 this.pages.push(i);
             }
             this.spinner.hide();
@@ -63,11 +69,22 @@ export class AppComponent implements OnInit {
             this.isClicked =!this.isClicked;            
             this.currentPage = i;
             this.data.page_number = this.currentPage + 1;
+            this.start = i * this.limit;
+            this.end = (i + 1) * this.limit;
+            if (this.log.length < this.end) {
+              this.end = this.log.length;
+            }
             // console.log(this.data)
-            this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
+            // this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
+            //     this.log = agent_data;
+            //     this.agents = this.log.res;
+            //     this.pageNumber=i+1;
+            //     this.spinner.hide();
+            // })
+            this._http.get(`http://localhost:3000/api/records?start=${this.start}&end=${this.end}`).subscribe(agent_data=>{
                 this.log = agent_data;
                 this.agents = this.log.res;
-                this.pageNumber=i+1;
+                console.log(this.agents)
                 this.spinner.hide();
             })
         }

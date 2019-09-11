@@ -4,7 +4,7 @@
             <div class="topHeader">WELCOME TO MOXI-WORKS</div>
         </h1>
         <br /><br />
-        <div>
+        <!-- <div>
             <div class="indexSize">
                 <form [formGroup]="formdata" (ngSubmit)="getParams(formdata.value)">
                     <div class="row">
@@ -50,13 +50,13 @@
                             <p>Agent id is incorrect</p>
                         </div></div>
                     </div>
-                    <!-- <div *ngIf="!formdata.valid" class="center">
+                     <div *ngIf="!formdata.valid" class="center">
                         <p class="errorMessage">Data is required</p>
                       </div> -->
-                    <div class="center"> <button type="submit" class="btn btn-primary btn-lg">submit</button></div>
-                </form>
+                    <!-- <div class="center"> <button type="submit" class="btn btn-primary btn-lg">submit</button></div>
+                </form> 
             </div>
-        </div><br /><br />
+        </div><br /><br /> -->
         <div class="form-group has-feedback">
             <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText" name="searchText">
             <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
@@ -64,7 +64,7 @@
         <div class="center" *ngIf="((agents | filter: searchText).length )!= 0">
             <span *ngFor="let index of pages">
                 <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
-                [ngClass]="(currentPage=== index) && !isClicked ? 'active' : '' || (pageNumber-1)===index && isClicked ?'active':'' "  >
+                [ngClass]="(currentPage=== index) ? 'active' : ''  "  >
                     <div   class="indexSize"> {{ index + 1 }}</div>
                 </button>
             </span>
@@ -88,11 +88,11 @@
                         data-toggle="modal" data-target="#myModal">
                        
                         <td>
-                            <b>{{ agent.agentid }}</b>
+                            <b>{{ agent.moxi_works_agent_id }}</b>
                         </td>
-                        <td>{{ agent.officeid}}</td>
+                        <td>{{ agent.client_office_id}}</td>
                         <td>{{ agent.name }}</td>
-                        <td>{{ agent.email}}</td>
+                        <td>{{ agent.primary_email_address}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -104,7 +104,7 @@
     </body>
     <footer class="center" *ngIf="((agents | filter: searchText).length )!= 0">
         <span *ngFor="let index of pages"> <button class="btn btn-outline-dark btn-lg"  (click)="getnextpages(index)"
-            [ngClass]="(currentPage=== index)  ? 'active' : '' || (pageNumber-1)===index && isClicked ? 'active':'' ">
+            [ngClass]="(currentPage=== index) ? 'active' : ''  ">
                 <div class="indexSize"> {{ index + 1 }}</div>
             </button>
         </span>
