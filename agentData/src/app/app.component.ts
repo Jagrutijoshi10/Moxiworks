@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
     agents = [];
     log;
     agentName;
-    message="no data";
+    message;
     pages = [];
     currentPage = 0;
     public searchText: string;
@@ -45,7 +45,8 @@ export class AppComponent implements OnInit {
             agentId: new FormControl("")
         });
         this.spinner.show();
-        this._http.post(`http://localhost:3000/api/data`, this.data).subscribe(() => {
+        this._http.post(`http://localhost:3000/api/data`, this.data).subscribe((message) => {
+            this.message=message
             this.spinner.hide();
         })
         this._http.get(`http://localhost:3000/api/records?start=0&end=${this.limit}`).subscribe(agent_data=>{
