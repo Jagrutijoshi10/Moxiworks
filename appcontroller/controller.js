@@ -12,7 +12,7 @@ let options = {
     },
 }
 var mysql = require('mysql');
-
+var async = require("async");
 var con = mysql.createPool({
     host: "127.0.0.1",
     user: "root",
@@ -23,18 +23,18 @@ var con = mysql.createPool({
 module.exports = function (err) {
     if (err) throw err;
     let self = {};
-    self.getdata = async (req, res) => {
-
+    self.getdata =  (req, res) => {
+        var log={};        
+        // var dynamicPageCount = 0;
+        var totalpagesInUrl = 1;
         // make this as a function with necessary params and return a callaback
-       async function first(callback) {
-            var dynamicPageCount = 0;
-            var totalpagesInUrl = 0;
-            do {
+         function first(dynamicPageCount, callback) {
+            console.log("first");
+            if(dynamicPageCount < totalpagesInUrl) {
                 dynamicPageCount++;
                 req.body["page_number"] = dynamicPageCount;
                 let url1 = 'https://api.moxiworks.com/api/agents/?';
                 let data = JSON.stringify(req.body);
-
                 for (let i = 0; i < data.length; i++) {
                     data = data.replace(',', '&');
                     data = data.replace(':', '=');
@@ -42,34 +42,53 @@ module.exports = function (err) {
                     data = data.replace('}', '');
                     data = data.replace('"', '');
                 }
-                let url = "url";
+                var url = "url";
                 let value = url1 + data;
                 options.url = value;
-                console.log(options)
-            } while (dynamicPageCount < totalpagesInUrl);
-            console.log(totalpagesInUrl);
-            console.log(dynamicPageCount);
-            
-            callback(options)
+                 console.log(totalpagesInUrl);
+                 console.log(dynamicPageCount);
+                 second(function(err, data){
+                     console.log("second callback");
+                     third(function(err, data){
+                        console.log("third callback");
+                        // if(dynamicPageCount < totalpagesInUrl)
+                        //     callback();
+                        // else 
+                            first(dynamicPageCount, callback);
+                     });
+                 });
+            }else{                                 
+                callback();
+                // console.log("done")
+            }
         }
 
         // make this as a function with necessary params and return a callaback
-        function second(callback) {
-            
-            request(options, function (err, response, body) {
+         function second(callback) {
+            console.log("second",options);  
+             request(options, function (err, response, body) {
+                 console.log("request");
                 if (err) throw err;
                 let parsed_data = JSON.parse(body);
                 const total_pages = parsed_data["total_pages"];
-                totalpagesInUrl = totalpagesInUrl + total_pages;
+                if(totalpagesInUrl<total_pages){
+                    totalpagesInUrl++;
 
-                let log = parsed_data["agents"];
-                callback(log, totalpagesInUrl);
+                }
+
+                 log = parsed_data["agents"];
+                //  return log;
+                 callback();
             });
+                     
+            
         }
 
-        function third(callback) {
+         function third(callback) {
+             console.log("third");
             // make this as a function with necessary params and return a callaback
-            con.getConnection(second(function (err) {
+            // console.log(log)
+             con.getConnection(function (err) {
                 if (err) throw err;
                 //create table
                 // var sql = "CREATE TABLE agent (moxi_works_agent_id varchar(200) PRIMARY KEY,client_agent_id varchar(200),mls_agent_id varchar(200),license varchar(200),mls_name varchar(200),mls_abbreviation varchar(200),moxi_works_office_id varchar(200),office_id varchar(200),client_office_id varchar(200),company_id varchar(200),client_company_id varchar(200),office_address_street varchar(200),office_address_street2 varchar(200),office_address_city varchar(200),office_address_state varchar(200),office_address_zip varchar(200),name varchar(200),first_name varchar(200),last_name varchar(200),nickname varchar(200),mobile_phone_number varchar(200),alt_phone_number varchar(200),fax_phone_number varchar(200),main_phone_number varchar(200),office_phone_number varchar(200),primary_email_address varchar(200),secondary_email_address varchar(200),lead_routing_email_address varchar(200),title varchar(200),uuid varchar(200),has_product_access varchar(200),has_engage_access varchar(200),access_level varchar(200),website_base_url varchar(200),twitter varchar(200),google_plus varchar(200),facebook varchar(200),instagram varchar(200),blogger varchar(200),youtube varchar(200),linked_in varchar(200),pinterest varchar(200),home_page varchar(200),profile_image_url varchar(200),profile_thumb_url varchar(200),region varchar(200),created_timestamp varchar(200),deactivated_timestamp varchar(200))";
@@ -78,31 +97,34 @@ module.exports = function (err) {
                 //     if (err) throw err;
                 //     console.log("Table created");
                 // });
-                _.each(log, (i) => {
+                
+
+                // ? modify to async.each =? in finallcallba use cb();
+                async.each(log, (i,cb) => {
                     let values = [];
                     values.push([i.moxi_works_agent_id, i.client_agent_id, i.mls_agent_id, i.license, i.mls_name, i.mls_abbreviation, i.moxi_works_office_id, i.office_id, i.client_office_id, i.company_id, i.client_company_id, i.office_address_street, i.office_address_street2, i.office_address_city, i.office_address_state, i.office_address_zip, i.name, i.first_name, i.last_name, i.nickname, i.mobile_phone_number, i.alt_phone_number, i.fax_phone_number, i.main_phone_number, i.office_phone_number, i.primary_email_address, i.secondary_email_address, i.lead_routing_email_address, i.title, i.uuid, i.has_product_access, i.has_engage_access, i.access_level, i.website_base_url, i.twitter, i.google_plus, i.facebook, i.instagram, i.blogger, i.youtube, i.linked_in, i.pinterest, i.home_page, i.profile_image_url, i.profile_thumb_url, i.region, i.created_timestamp, i.deactivated_timestamp]);
                     // insert query
                     con.query("INSERT IGNORE INTO agent VALUES ?", [values], function (err, result) {
+                        console.log("insetion completed with err:",err);
                         if (err) throw err;
-                        // console.log("Table inserted");
+                        return result;
+                        
                     });
+                    cb();
                 });
-            }));
-            callback(result);
-
-            //  res.send({message:'data loaded successfully'});
+                callback();
+            });
+            console.log("third");
         }
-        function print(callback) {
-            second(function () {
-                first(function () {
-                    third(callback);
-
-                }
-                )
-            })
+        
+        async function print() {
+           await first(0, async function () {
+               console.log(" 1completed");
+           });
         }
-        print(function () {
+        print(function (req,res) {
             console.log("finished");
+            // res.send();
         })
     }
 
