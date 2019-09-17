@@ -28,11 +28,13 @@ module.exports = function (err) {
         // var dynamicPageCount = 0;
         var totalpagesInUrl = 1;
         // make this as a function with necessary params and return a callaback
-         function first(dynamicPageCount, callback) {
+         function first(currentPage, callback) {
             console.log("first");
-            if(dynamicPageCount < totalpagesInUrl) {
-                dynamicPageCount++;
-                req.body["page_number"] = dynamicPageCount;
+            console.log(currentPage);
+            console.log(totalpagesInUrl);
+            if(currentPage < totalpagesInUrl) {
+                currentPage++;
+                req.body["page_number"] = currentPage;
                 let url1 = 'https://api.moxiworks.com/api/agents/?';
                 let data = JSON.stringify(req.body);
                 for (let i = 0; i < data.length; i++) {
@@ -45,8 +47,7 @@ module.exports = function (err) {
                 var url = "url";
                 let value = url1 + data;
                 options.url = value;
-                 console.log(totalpagesInUrl);
-                 console.log(dynamicPageCount);
+                 
                  second(function(err, data){
                      console.log("second callback");
                      third(function(err, data){
@@ -54,7 +55,7 @@ module.exports = function (err) {
                         // if(dynamicPageCount < totalpagesInUrl)
                         //     callback();
                         // else 
-                            first(dynamicPageCount, callback);
+                            first(currentPage, callback);
                      });
                  });
             }else{                                 
@@ -68,20 +69,22 @@ module.exports = function (err) {
             console.log("second",options);  
              request(options, function (err, response, body) {
                  console.log("request");
+                 console.log("status code:", response.statusCode);
                 if (err) throw err;
                 let parsed_data = JSON.parse(body);
-                const total_pages = parsed_data["total_pages"];
-                if(totalpagesInUrl<total_pages){
-                    totalpagesInUrl++;
+                const total_pages = parsed_data.total_pages;
+                console.log('parsed_data.total_pages:',parsed_data.total_pages);
+                totalpagesInUrl = total_pages;
+                // if(totalpagesInUrl<total_pages){
+                //     totalpagesInUrl++;
 
-                }
+                // }
 
                  log = parsed_data["agents"];
                 //  return log;
                  callback();
             });
                      
-            
         }
 
          function third(callback) {
@@ -106,26 +109,28 @@ module.exports = function (err) {
                     // insert query
                     con.query("INSERT IGNORE INTO agent VALUES ?", [values], function (err, result) {
                         console.log("insetion completed with err:",err);
-                        if (err) throw err;
-                        return result;
-                        
+                        // if (err) throw err;
+                        // return result;
+                        cb();                        
                     });
-                    cb();
-                });
-                callback();
+                },callback); 
             });
-            console.log("third");
         }
         
-        async function print() {
-           await first(0, async function () {
-               console.log(" 1completed");
-           });
-        }
-        print(function (req,res) {
-            console.log("finished");
-            // res.send();
-        })
+        // async function print() {
+        //    await first(0, async function () {
+        //        console.log(" 1completed");
+        //    });
+        // }
+        // print(function (req,res) {
+        //     console.log("finished");
+        //     // res.send();
+        // })
+        first(0, function(){
+            console.log(" 1completed");
+            res.send({message:"data sent"})
+        });
+
     }
 
     self.getrecords = (req, res) => {
@@ -148,4 +153,3 @@ module.exports = function (err) {
     }
     return self;
 }();
-
