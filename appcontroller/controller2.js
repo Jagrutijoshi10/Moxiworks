@@ -23,22 +23,22 @@ var con = mysql.createPool({
 module.exports = function () {
     let self = {};
     self.getdata = (req, res) => {
-//         function createTable() {
-//             var sql = "CREATE TABLE agent (moxi_works_agent_id varchar(200) PRIMARY KEY,client_agent_id varchar(200),mls_agent_id varchar(200),license varchar(200),mls_name varchar(200),mls_abbreviation varchar(200),moxi_works_office_id varchar(200),office_id varchar(200),client_office_id varchar(200),company_id varchar(200),client_company_id varchar(200),office_address_street varchar(200),office_address_street2 varchar(200),office_address_city varchar(200),office_address_state varchar(200),office_address_zip varchar(200),name varchar(200),first_name varchar(200),last_name varchar(200),nickname varchar(200),mobile_phone_number varchar(200),alt_phone_number varchar(200),fax_phone_number varchar(200),main_phone_number varchar(200),office_phone_number varchar(200),primary_email_address varchar(200),secondary_email_address varchar(200),lead_routing_email_address varchar(200),title varchar(200),uuid varchar(200),has_product_access varchar(200),has_engage_access varchar(200),access_level varchar(200),website_base_url varchar(200),twitter varchar(200),google_plus varchar(200),facebook varchar(200),instagram varchar(200),blogger varchar(200),youtube varchar(200),linked_in varchar(200),pinterest varchar(200),home_page varchar(200),profile_image_url varchar(200),profile_thumb_url varchar(200),region varchar(200),created_timestamp varchar(200),deactivated_timestamp varchar(200))";
-//             con.getConnection(function () {
-//                 con.query(sql, function () {
-//                     console.log("table created")
-//                 })
-//             })
-//         }
+        function createTable() {
+            var sql = "CREATE TABLE agent (moxi_works_agent_id varchar(200) PRIMARY KEY,client_agent_id varchar(200),mls_agent_id varchar(200),license varchar(200),mls_name varchar(200),mls_abbreviation varchar(200),moxi_works_office_id varchar(200),office_id varchar(200),client_office_id varchar(200),company_id varchar(200),client_company_id varchar(200),office_address_street varchar(200),office_address_street2 varchar(200),office_address_city varchar(200),office_address_state varchar(200),office_address_zip varchar(200),name varchar(200),first_name varchar(200),last_name varchar(200),nickname varchar(200),mobile_phone_number varchar(200),alt_phone_number varchar(200),fax_phone_number varchar(200),main_phone_number varchar(200),office_phone_number varchar(200),primary_email_address varchar(200),secondary_email_address varchar(200),lead_routing_email_address varchar(200),title varchar(200),uuid varchar(200),has_product_access varchar(200),has_engage_access varchar(200),access_level varchar(200),website_base_url varchar(200),twitter varchar(200),google_plus varchar(200),facebook varchar(200),instagram varchar(200),blogger varchar(200),youtube varchar(200),linked_in varchar(200),pinterest varchar(200),home_page varchar(200),profile_image_url varchar(200),profile_thumb_url varchar(200),region varchar(200),created_timestamp varchar(200),deactivated_timestamp varchar(200))";
+            con.getConnection(function () {
+                con.query(sql, function () {
+                    // console.log("table created")
+                })
+            })
+        }
    
-// createTable();
+createTable();
     // let currentPage = 0;
     let totalPagesInMoxiWorks = 1;
     var log = {};
     function getDataFromUi(currentPage,callback) {
-        console.log(currentPage, totalPagesInMoxiWorks);
-        console.log("first")
+        // console.log(currentPage, totalPagesInMoxiWorks);
+        // console.log("first")
       
             if(currentPage <totalPagesInMoxiWorks){
             currentPage++;
@@ -52,11 +52,11 @@ module.exports = function () {
             let completeUrl = url + data;
             // console.log(completeUrl)
             options.url = completeUrl;
-            console.log(options);
+            // console.log(options);
             getDataFromMoxiUrl(function () {
-                console.log("second call")
+                // console.log("second call")
                 insertionInMysql(function () {
-                    console.log("third call")
+                    // console.log("third call")
                     getDataFromUi(currentPage,callback);
                 })
             })
@@ -67,19 +67,19 @@ module.exports = function () {
     }
 
     function getDataFromMoxiUrl(callback) {
-        console.log("second");
+        // console.log("second");
         request(options, (err, response, body) => {
             let pd = JSON.parse(body);
             totalPagesInMoxiWorks=pd.total_pages;
             pd.total_pages=2;
-            console.log(totalPagesInMoxiWorks)
+            // console.log(totalPagesInMoxiWorks)
             log = pd["agents"];
             callback();
 
         })
     }
     function insertionInMysql(callback) {
-        console.log("third")
+        // console.log("third")
         con.getConnection(function (req, res, err) {
             if (err) throw err;
             //    createTable();
@@ -91,6 +91,9 @@ module.exports = function () {
                 con.query("INSERT IGNORE INTO agent VALUES ?", [values], function (err, result) {
                     // console.log("insetion completed with err:", err);
                 });
+                con.query("INSERT IGNORE INTO agent_log VALUES ?", [values], function (err, result) {
+                    // console.log("insetion completed with err:", err);
+                });
                
             } ,callback())
            
@@ -100,7 +103,7 @@ module.exports = function () {
     }
 
     getDataFromUi(0,function () {
-        console.log("one time completed");
+        // console.log("one time completed");
         res.send({message:"data sent"})
 
     });
