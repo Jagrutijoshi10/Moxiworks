@@ -29,9 +29,9 @@ module.exports = function (err) {
         var totalpagesInUrl = 1;
         // make this as a function with necessary params and return a callaback
          function first(currentPage, callback) {
-            console.log("first");
-            console.log(currentPage);
-            console.log(totalpagesInUrl);
+            // console.log("first");
+            // console.log(currentPage);
+            // console.log(totalpagesInUrl);
             if(currentPage < totalpagesInUrl) {
                 currentPage++;
                 req.body["page_number"] = currentPage;
@@ -49,9 +49,9 @@ module.exports = function (err) {
                 options.url = value;
                  
                  second(function(err, data){
-                     console.log("second callback");
+                    //  console.log("second callback");
                      third(function(err, data){
-                        console.log("third callback");
+                        // console.log("third callback");
                         // if(dynamicPageCount < totalpagesInUrl)
                         //     callback();
                         // else 
@@ -66,14 +66,14 @@ module.exports = function (err) {
 
         // make this as a function with necessary params and return a callaback
          function second(callback) {
-            console.log("second",options);  
+            // console.log("second",options);  
              request(options, function (err, response, body) {
-                 console.log("request");
-                 console.log("status code:", response.statusCode);
+                //  console.log("request");
+                //  console.log("status code:", response.statusCode);
                 if (err) throw err;
                 let parsed_data = JSON.parse(body);
                 const total_pages = parsed_data.total_pages;
-                console.log('parsed_data.total_pages:',parsed_data.total_pages);
+                // console.log('parsed_data.total_pages:',parsed_data.total_pages);
                 totalpagesInUrl = total_pages;
                 // if(totalpagesInUrl<total_pages){                     
                 //     totalpagesInUrl++;
@@ -88,7 +88,7 @@ module.exports = function (err) {
         }
 
          function third(callback) {
-             console.log("third");
+            //  console.log("third");
             // make this as a function with necessary params and return a callaback
             // console.log(log)
              con.getConnection(function (err) {
@@ -108,7 +108,7 @@ module.exports = function (err) {
                     values.push([i.moxi_works_agent_id, i.client_agent_id, i.mls_agent_id, i.license, i.mls_name, i.mls_abbreviation, i.moxi_works_office_id, i.office_id, i.client_office_id, i.company_id, i.client_company_id, i.office_address_street, i.office_address_street2, i.office_address_city, i.office_address_state, i.office_address_zip, i.name, i.first_name, i.last_name, i.nickname, i.mobile_phone_number, i.alt_phone_number, i.fax_phone_number, i.main_phone_number, i.office_phone_number, i.primary_email_address, i.secondary_email_address, i.lead_routing_email_address, i.title, i.uuid, i.has_product_access, i.has_engage_access, i.access_level, i.website_base_url, i.twitter, i.google_plus, i.facebook, i.instagram, i.blogger, i.youtube, i.linked_in, i.pinterest, i.home_page, i.profile_image_url, i.profile_thumb_url, i.region, i.created_timestamp, i.deactivated_timestamp]);
                     // insert query
                     con.query("INSERT IGNORE INTO agent VALUES ?", [values], function (err, result) {
-                        console.log("insetion completed with err:",err);
+                        // console.log("insetion completed with err:",err);
                         // if (err) throw err;
                         // return result;
                         cb();                        
@@ -127,7 +127,7 @@ module.exports = function (err) {
         //     // res.send();
         // })
         first(0, function(){
-            console.log(" 1completed");
+            // console.log(" 1completed");
             res.send({message:"data sent"})
         });
 

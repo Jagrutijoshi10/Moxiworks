@@ -21,7 +21,8 @@ export class AppComponent implements OnInit {
     selectedAgent = false;
     start: any;
     end: any;
-    limit: any = 10;
+    selectedLimit=["10","15","20","25"];
+    limit:any=10;
 
     companyId: any = 'moxi_works';
     pageNumber: any = '1';
@@ -62,6 +63,14 @@ export class AppComponent implements OnInit {
                     this.pages.push(i);
                 }
             });
+    }
+    selectChangeHandler(event:any){
+        this.selectedLimit = event.target.value;
+        this.limit=this.selectedLimit;
+        console.log(this.limit)
+        for (var i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
+            this.pages.push(i);
+        }
     }
     getnextpages(i) {
         this.spinner.show();

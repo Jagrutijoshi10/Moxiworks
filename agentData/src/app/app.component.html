@@ -57,20 +57,35 @@
                 </form> 
             </div>
         </div><br /><br /> -->
+       
         <div class="form-group has-feedback">
-            <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText" name="searchText">
-            <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
-        </div>
-        <div class="center" *ngIf="((agents | filter: searchText).length )!= 0">
-            <span *ngFor="let index of pages">
-                <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
-                [ngClass]="(currentPage=== index) ? 'active' : ''  "  >
-                    <div   class="indexSize"> {{ index + 1 }}</div>
-                </button>
-            </span>
-        </div>
-    </header><br />
-
+                <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText" name="searchText">
+                <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+            <div class="right">
+                    <!-- <div class="dropdown" class="right">
+                            <button type="button" class="btn btn-dark btn-lg dropdown-toggle" data-toggle="dropdown">
+                              select limit
+                            </button>
+                            <div class="dropdown-menu"> -->
+                                    <select (change)="selectChangeHandler($event)">
+                                            <option value="10" selected>10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                            <option value="25">25</option>
+                                        </select>
+                            <!-- </div>
+                          </div> -->
+            </div>
+            <div class="center" *ngIf="((agents | filter: searchText).length )!= 0">
+                <span *ngFor="let index of pages">
+                    <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
+                    [ngClass]="(currentPage=== index) ? 'active' : ''  "  >
+                        <div   class="indexSize"> {{ index + 1 }}</div>
+                    </button>
+                </span>
+            </div>
+        </header><br />
     <body>
         <ngx-spinner></ngx-spinner>
         <div class="pagination justify-content-center">
