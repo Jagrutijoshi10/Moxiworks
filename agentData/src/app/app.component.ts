@@ -68,14 +68,15 @@ export class AppComponent implements OnInit {
                     }
             });
     }
-    onLimitChange(){
+    onLimitChange(event){
         this.spinner.show();
         // if(this.selectedLimit==10){
         //     this.selected=true;
         //     this.spinner.hide();
         // }
         this.pages.splice(0,this.pages.length);
-        this.limit=this.selectedLimit;
+        this.limit=event.value
+        // this.limit=this.selectedLimit;
         console.log(this.limit)
        
         this._http.post(`http://localhost:3000/api/data`, this.data)
@@ -90,6 +91,9 @@ export class AppComponent implements OnInit {
             this.log = agent_data;
             this.agents = this.log.res;
             console.log(this.agents)
+            console.log('length',this.log.length)
+            console.log('limit',this.limit)
+
                 for (var i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
                     this.pages.push(i);
                 }

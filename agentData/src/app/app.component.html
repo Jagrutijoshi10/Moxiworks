@@ -28,7 +28,7 @@
             <div class="placeright">
                 <mat-form-field>
                     <mat-label>Select an option</mat-label>
-                    <mat-select [(value)]="selected" (selectionChange)="onLimitChange()">
+                    <mat-select [(value)]="selected" (selectionChange)="onLimitChange($event)">
                         <mat-option value="10">10</mat-option>
                         <mat-option value="15">15</mat-option>
                         <mat-option value="20">20</mat-option>
@@ -77,7 +77,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         </table>
-        
+
         <div>
             <span *ngIf="(agents | filter: searchText).length === 0">
                 <p class="center">"No Exact matches"</p>
