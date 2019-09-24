@@ -6,6 +6,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule,ReactiveFormsModule } from "@angular/forms";
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatSelectModule, matSelectAnimations} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatTableModule} from '@angular/material/table';
+import {MatInputModule} from '@angular/material/input';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -16,8 +22,13 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     NgxSpinnerModule,
     HttpClientModule,
     FormsModule,
+    MatFormFieldModule,
+    MatTableModule,
+    MatInputModule,
     ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    BrowserAnimationsModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

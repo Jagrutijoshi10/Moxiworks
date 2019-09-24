@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { NgxSpinnerService } from "ngx-spinner";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { switchMap, finalize } from 'rxjs/operators';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -21,16 +22,19 @@ export class AppComponent implements OnInit {
     selectedAgent = false;
     start: any;
     end: any;
-    selectedLimit=["10","15","20","25"];
+    // selected=false;
     limit:any=10;
+    selectedLimit='';
+    displayedColumns: string[] = ['agent id', 'client office id', 'name', 'email id'];
 
-    companyId: any = 'moxi_works';
-    pageNumber: any = '1';
-    updatedSince: any = '1461108284';
-    agentId: any = 'demo_4@moxiworks.com';
+
+
+    // companyId: any = 'moxi_works';
+    // pageNumber: any = '1';
+    // updatedSince: any = '1461108284';
+    // agentId: any = 'demo_4@moxiworks.com';
     formdata;
     isClicked = false;
-
     data: any = {
         moxi_works_company_id: 'moxi_works',
         page_number: '1',
@@ -39,7 +43,6 @@ export class AppComponent implements OnInit {
     };
     constructor(private _http: HttpClient, private _route: ActivatedRoute, private _router: Router, private spinner: NgxSpinnerService) { }
     ngOnInit() {
-
         this.formdata = new FormGroup({
             companyId: new FormControl(""),
             pageNumber: new FormControl(""),
@@ -59,18 +62,39 @@ export class AppComponent implements OnInit {
                 this.log = agent_data;
                 this.agents = this.log.res;
                 console.log(this.agents)
+              
+                    for (var i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
+                        this.pages.push(i);
+                    }
+            });
+    }
+    onLimitChange(){
+        this.spinner.show();
+        // if(this.selectedLimit==10){
+        //     this.selected=true;
+        //     this.spinner.hide();
+        // }
+        this.pages.splice(0,this.pages.length);
+        this.limit=this.selectedLimit;
+        console.log(this.limit)
+       
+        this._http.post(`http://localhost:3000/api/data`, this.data)
+        .pipe(
+            switchMap(() => {
+                return this._http.get(`http://localhost:3000/api/records?start=0&end=${this.limit}`);
+            }),
+            finalize(() => {
+                this.spinner.hide();
+            })
+        ).subscribe((agent_data: any) => {
+            this.log = agent_data;
+            this.agents = this.log.res;
+            console.log(this.agents)
                 for (var i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
                     this.pages.push(i);
                 }
-            });
-    }
-    selectChangeHandler(event:any){
-        this.selectedLimit = event.target.value;
-        this.limit=this.selectedLimit;
-        console.log(this.limit)
-        for (var i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
-            this.pages.push(i);
-        }
+        });
+
     }
     getnextpages(i) {
         this.spinner.show();

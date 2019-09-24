@@ -1,3 +1,5 @@
+
+
 .white-space-pre {
     white-space: pre-wrap;
 }
@@ -36,12 +38,28 @@ tr.normal{
   .right{
     float: right;
 }
+.placeright{
+   text-align: right
+}
+.example-form {
+    min-width: 150px;
+    max-width: 1500px;
+    width: 100%;
+  }
+
+  .example-full-width {
+    width: 100%;
+  }
+  
 .alignright{
     text-align: left;
 }
 form{
     width: 100%
 }
+table {
+    width: 100%;
+  }
 .errorMessage{
 color: red;
 font-size: 20px;

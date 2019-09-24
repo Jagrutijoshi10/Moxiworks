@@ -4,122 +4,90 @@
             <div class="topHeader">WELCOME TO MOXI-WORKS</div>
         </h1>
         <br /><br />
-        <!-- <div>
-            <div class="indexSize">
-                <form [formGroup]="formdata" (ngSubmit)="getParams(formdata.value)">
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <label>Enter the moxi works company id:</label>
-                            <input type="text" id="id" class="form-control" [(ngModel)]="companyId" name="companyId"
-                                required formControlName="companyId" />
-                            <div *ngIf="companyId!='moxi_works'" class="errorMessage">
-                                <p>Company id is incorrect</p>
-                            </div>
-
-                        </div>
-
-                        <div class="col-xl-6">
-
-                            <label>Enter the page number:</label>
-                            <input type="text" id="pageNumber" class="form-control" [(ngModel)]="pageNumber" required
-                                name="pageNumber" formControlName="pageNumber" />
-
-                            <div *ngIf="pageNumber!='1' && pageNumber!='2'" class="errorMessage">
-                                <p>Page Number is incorrect</p>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <label>Enter the value of updated since:</label>
-                            <input type="text" id="updatedSince" class="form-control" [(ngModel)]="updatedSince"
-                                required name="updatedSince" formControlName="updatedSince" />
-
-                            <div *ngIf="updatedSince!='1461108284'" class="errorMessage">
-                                <p>Value of updated since is incorrect</p>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-6">
-                            <label>Enter the moxi works agent id:</label>
-                            <input type="text" id="agentId" class="form-control" [(ngModel)]="agentId" name="agentId"
-                                required formControlName="agentId" /><br />
-
-                        <div *ngIf="agentId!='demo_4@moxiworks.com'" class="errorMessage">
-                            <p>Agent id is incorrect</p>
-                        </div></div>
-                    </div>
-                     <div *ngIf="!formdata.valid" class="center">
-                        <p class="errorMessage">Data is required</p>
-                      </div> -->
-                    <!-- <div class="center"> <button type="submit" class="btn btn-primary btn-lg">submit</button></div>
-                </form> 
-            </div>
-        </div><br /><br /> -->
        
-        <div class="form-group has-feedback">
-                <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchText" name="searchText">
-                <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
+        <div>
+            <form class="example-form">
+                <mat-form-field class="example-full-width">
+                    <input matInput placeholder="search" [(ngModel)]="searchText" name="searchText">
+                    <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
+                </mat-form-field>
+            </form>
+        
+            <br /><br />
+            <div>
+                <div class="center" *ngIf="((agents | filter: searchText).length )!= 0">
+                    <span *ngFor="let index of pages">
+                        <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
+                            [ngClass]="(currentPage=== index) ? 'active' : ''  ">
+                            <div class="indexSize"> {{ index + 1 }}</div>
+                        </button>
+                    </span>
+                </div>
             </div>
-            <div class="right">
-                    <!-- <div class="dropdown" class="right">
-                            <button type="button" class="btn btn-dark btn-lg dropdown-toggle" data-toggle="dropdown">
-                              select limit
-                            </button>
-                            <div class="dropdown-menu"> -->
-                                    <select (change)="selectChangeHandler($event)">
-                                            <option value="10" selected>10</option>
-                                            <option value="15">15</option>
-                                            <option value="20">20</option>
-                                            <option value="25">25</option>
-                                        </select>
-                            <!-- </div>
-                          </div> -->
+            <br /><br />
+            <div class="placeright">
+                <mat-form-field>
+                    <mat-label>Select an option</mat-label>
+                    <mat-select [(value)]="selected" (selectionChange)="onLimitChange()">
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="25">25</mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
-            <div class="center" *ngIf="((agents | filter: searchText).length )!= 0">
-                <span *ngFor="let index of pages">
-                    <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
-                    [ngClass]="(currentPage=== index) ? 'active' : ''  "  >
-                        <div   class="indexSize"> {{ index + 1 }}</div>
-                    </button>
-                </span>
-            </div>
-        </header><br />
+        </div>
+
+    </header><br />
+
     <body>
         <ngx-spinner></ngx-spinner>
-        <div class="pagination justify-content-center">
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Agent ID</th>
-                        <th>Client Office ID</th>
-                        <th> Name</th>
-                        <th>Email ID</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let agent of agents  | filter:  searchText" (click)="getAgentLog(agent)"
-                        data-toggle="modal" data-target="#myModal">
-                       
-                        <td>
-                            <b>{{ agent.moxi_works_agent_id }}</b>
-                        </td>
-                        <td>{{ agent.client_office_id}}</td>
-                        <td>{{ agent.name }}</td>
-                        <td>{{ agent.primary_email_address}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <table mat-table [dataSource]="agents| filter:  searchText" class="mat-elevation-z8"
+                                data-toggle="modal" data-target="#myModal">
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="agent id">
+                <th mat-header-cell *matHeaderCellDef><b> Agent ID</b> </th>
+                <td mat-cell *matCellDef="let agent"  (click)="getAgentLog(agent)"> <b>{{ agent.moxi_works_agent_id }}</b></td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="client office id">
+                <th mat-header-cell *matHeaderCellDef><b> Client Office ID </b></th>
+                <td mat-cell *matCellDef="let agent"  (click)="getAgentLog(agent)"> {{ agent.client_office_id}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef><b> Name </b></th>
+                <td mat-cell *matCellDef="let agent"  (click)="getAgentLog(agent)"> {{ agent.name }} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="email id">
+                <th mat-header-cell *matHeaderCellDef><b> Email ID</b> </th>
+                <td mat-cell *matCellDef="let agent"  (click)="getAgentLog(agent)"> {{ agent.primary_email_address}} </td>
+            </ng-container>
+            <!--  <tr *ngFor="let agent of agents  | filter:  searchText" ></tr> -->
+            
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+        
         <div>
-            <span *ngIf="(agents | filter: searchText).length === 0"><p class="center">"No Exact matches"</p></span>
+            <span *ngIf="(agents | filter: searchText).length === 0">
+                <p class="center">"No Exact matches"</p>
+            </span>
 
         </div>
-    </body>
+    </body><br/><br/>
     <footer class="center" *ngIf="((agents | filter: searchText).length )!= 0">
-        <span *ngFor="let index of pages"> <button class="btn btn-outline-dark btn-lg"  (click)="getnextpages(index)"
-            [ngClass]="(currentPage=== index) ? 'active' : ''  ">
+        <span *ngFor="let index of pages"> <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
+                [ngClass]="(currentPage=== index) ? 'active' : ''  ">
                 <div class="indexSize"> {{ index + 1 }}</div>
             </button>
         </span>
@@ -154,12 +122,12 @@
                                 <div class="fontSize">Close</div>
                             </button>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+
 </div>
-
-
