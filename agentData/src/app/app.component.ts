@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from "@angular/router";
-import { NgxSpinnerService } from "ngx-spinner";
+import { NgxSpinnerService } from 'ngx-spinner';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { switchMap, finalize } from 'rxjs/operators';
 
@@ -23,11 +22,9 @@ export class AppComponent implements OnInit {
     start: any;
     end: any;
     // selected=false;
-    limit:any=10;
-    selectedLimit='';
+    limit: any = 10;
+    selectedLimit:any=10;
     displayedColumns: string[] = ['agent id', 'client office id', 'name', 'email id'];
-
-
 
     // companyId: any = 'moxi_works';
     // pageNumber: any = '1';
@@ -41,13 +38,13 @@ export class AppComponent implements OnInit {
         updated_since: '1461108284',
         moxi_works_agent_id: 'demo_4@moxiworks.com'
     };
-    constructor(private _http: HttpClient, private _route: ActivatedRoute, private _router: Router, private spinner: NgxSpinnerService) { }
+    constructor(private _http: HttpClient, private spinner: NgxSpinnerService) { }
     ngOnInit() {
         this.formdata = new FormGroup({
-            companyId: new FormControl(""),
-            pageNumber: new FormControl(""),
-            updatedSince: new FormControl(""),
-            agentId: new FormControl("")
+            companyId: new FormControl(''),
+            pageNumber: new FormControl(''),
+            updatedSince: new FormControl(''),
+            agentId: new FormControl('')
         });
         this.spinner.show();
         this._http.post(`http://localhost:3000/api/data`, this.data)
@@ -61,23 +58,21 @@ export class AppComponent implements OnInit {
             ).subscribe((agent_data: any) => {
                 this.log = agent_data;
                 this.agents = this.log.res;
-                console.log(this.agents)
-              
-                    for (var i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
+                console.log(this.agents);
+                for (let i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
                         this.pages.push(i);
                     }
             });
     }
-    onLimitChange(event){
+    onLimitChange(event) {
         this.spinner.show();
-        // if(this.selectedLimit==10){
-        //     this.selected=true;
-        //     this.spinner.hide();
-        // }
-        this.pages.splice(0,this.pages.length);
-        this.limit=event.value
-        // this.limit=this.selectedLimit;
-        console.log(this.limit)
+        this.selectedLimit=event.value;
+        if(parseInt(this.selectedLimit)===this.limit){
+            this.spinner.hide();
+        }
+       else{
+       this.limit=this.selectedLimit;
+        this.pages.splice(0, this.pages.length);
        
         this._http.post(`http://localhost:3000/api/data`, this.data)
         .pipe(
@@ -90,33 +85,30 @@ export class AppComponent implements OnInit {
         ).subscribe((agent_data: any) => {
             this.log = agent_data;
             this.agents = this.log.res;
-            console.log(this.agents)
-            console.log('length',this.log.length)
-            console.log('limit',this.limit)
-
-                for (var i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
-                    this.pages.push(i);
-                }
+            console.log(this.agents);
+            for (let i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
+                this.pages.push(i);
+            }
         });
-
+    }
     }
     getnextpages(i) {
         this.spinner.show();
-
-        if (this.currentPage == i) {
+        if (this.currentPage === i) {
             // this.pageNumber=i+1;
             // this.currentPage = i;
             this.spinner.hide();
         } else {
-            this.isClicked = !this.isClicked;
+            this.isClicked = true;
             this.currentPage = i;
-            this.data.page_number = this.currentPage + 1;
+            // this.data.page_number = this.currentPage + 1;
             this.start = i * this.limit;
             this.end = (i + 1) * this.limit;
             if (this.log.length < this.end) {
                 this.end = this.log.length;
             }
-            // console.log(this.data)
+            
+            // console.log(i)
             // this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
             //     this.log = agent_data;
             //     this.agents = this.log.res;
@@ -124,12 +116,12 @@ export class AppComponent implements OnInit {
             //     this.spinner.hide();
             // })
 
-            this._http.get(`http://localhost:3000/api/records?start=${this.start}&end=${this.end}`).subscribe(agent_data => {
+            this._http.get(`http://localhost:3000/api/records?start=${this.start}&end=${this.end}`).subscribe((agent_data:any) => {
                 this.log = agent_data;
                 this.agents = this.log.res;
-                console.log(this.agents)
+                // console.log(this.agents);
                 this.spinner.hide();
-            })
+            });
         }
 
 

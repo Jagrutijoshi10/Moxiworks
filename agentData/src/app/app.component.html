@@ -4,46 +4,59 @@
             <div class="topHeader">WELCOME TO MOXI-WORKS</div>
         </h1>
         <br /><br />
-       
-        <div>
-            <form class="example-form">
-                <mat-form-field class="example-full-width">
-                    <input matInput placeholder="search" [(ngModel)]="searchText" name="searchText">
-                    <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
-                </mat-form-field>
-            </form>
-        
-            <br /><br />
-            <div>
-                <div class="center" *ngIf="((agents | filter: searchText).length )!= 0">
-                    <span *ngFor="let index of pages">
-                        <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
-                            [ngClass]="(currentPage=== index) ? 'active' : ''  ">
-                            <div class="indexSize"> {{ index + 1 }}</div>
-                        </button>
-                    </span>
-                </div>
-            </div>
-            <br /><br />
-            <div class="placeright">
-                <mat-form-field>
-                    <mat-label>Select an option</mat-label>
-                    <mat-select [(value)]="selected" (selectionChange)="onLimitChange($event)">
-                        <mat-option value="10">10</mat-option>
-                        <mat-option value="15">15</mat-option>
-                        <mat-option value="20">20</mat-option>
-                        <mat-option value="25">25</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
 
+        <div>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <form class="example-form">
+                            <mat-form-field class="example-full-width" appearance="outline">
+                                <mat-label class="indexSize">Search</mat-label>
+                                <input matInput  [(ngModel)]="searchText" name="searchText">
+                                <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                    <div class="col">
+                        <div class="placeright">
+                            <mat-form-field appearance="outline">
+                                <mat-label class="indexSize">Select agents per page</mat-label>
+                                <mat-select [(value)]="selected" (selectionChange)="onLimitChange($event)">
+                                    <mat-option value="10">10</mat-option>
+                                    <mat-option value="15">15</mat-option>
+                                    <mat-option value="20">20</mat-option>
+                                    <mat-option value="25">25</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+            </div><br />
+            <div class="center" *ngIf="((agents | filter: searchText).length )!= 0">
+                <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(currentPage-1)"
+                    [disabled]='currentPage==pages[0]'>
+                    <div class="indexSize">&laquo;</div>
+                </button>
+                <span *ngFor="let index of pages">
+                    <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
+                        [ngClass]="(currentPage=== index) ? 'active' : ''  ">
+                        <div class="indexSize"> {{ index + 1 }}</div>
+                    </button>
+                </span>
+                <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(currentPage+1)"
+                    [disabled]='currentPage==pages[pages.length-1]'>
+                    <div class="indexSize">&raquo;</div>
+                </button>
+            </div>
+
+            <br /><br />
+        </div>
     </header><br />
 
     <body>
         <ngx-spinner></ngx-spinner>
-        <table mat-table [dataSource]="agents| filter:  searchText" class="mat-elevation-z8"
-                                data-toggle="modal" data-target="#myModal">
+        <table mat-table [dataSource]="agents| filter:  searchText" class="mat-elevation-z8"                       >
 
             <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
@@ -51,49 +64,60 @@
             <!-- Position Column -->
             <ng-container matColumnDef="agent id">
                 <th mat-header-cell *matHeaderCellDef><b> Agent ID</b> </th>
-                <td mat-cell *matCellDef="let agent"  (click)="getAgentLog(agent)"> <b>{{ agent.moxi_works_agent_id }}</b></td>
+                <td mat-cell *matCellDef="let agent"> <b>{{ agent.moxi_works_agent_id }}</b></td>
             </ng-container>
 
             <!-- Name Column -->
             <ng-container matColumnDef="client office id">
                 <th mat-header-cell *matHeaderCellDef><b> Client Office ID </b></th>
-                <td mat-cell *matCellDef="let agent"  (click)="getAgentLog(agent)"> {{ agent.client_office_id}} </td>
+                <td mat-cell *matCellDef="let agent"> {{ agent.client_office_id}} </td>
             </ng-container>
 
             <!-- Weight Column -->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef><b> Name </b></th>
-                <td mat-cell *matCellDef="let agent"  (click)="getAgentLog(agent)"> {{ agent.name }} </td>
+                <td mat-cell *matCellDef="let agent"> {{ agent.name }} </td>
             </ng-container>
 
             <!-- Symbol Column -->
             <ng-container matColumnDef="email id">
                 <th mat-header-cell *matHeaderCellDef><b> Email ID</b> </th>
-                <td mat-cell *matCellDef="let agent"  (click)="getAgentLog(agent)"> {{ agent.primary_email_address}} </td>
+                <td mat-cell *matCellDef="let agent"> {{ agent.primary_email_address}} </td>
             </ng-container>
             <!--  <tr *ngFor="let agent of agents  | filter:  searchText" ></tr> -->
-            
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getAgentLog(row)"
+                  data-toggle="modal"  data-target="#myModal"></tr>
+            <p>{{row}}</p>
         </table>
 
-        <div>
+        
             <span *ngIf="(agents | filter: searchText).length === 0">
                 <p class="center">"No Exact matches"</p>
             </span>
 
-        </div>
-    </body><br/><br/>
+    
+    </body><br /><br />
     <footer class="center" *ngIf="((agents | filter: searchText).length )!= 0">
+        <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(currentPage-1)"
+            [disabled]='currentPage==pages[0]'>
+            <div class="indexSize">&laquo;</div>
+        </button>
         <span *ngFor="let index of pages"> <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(index)"
                 [ngClass]="(currentPage=== index) ? 'active' : ''  ">
                 <div class="indexSize"> {{ index + 1 }}</div>
             </button>
         </span>
+        <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(currentPage+1)"
+            [disabled]='currentPage==pages[pages.length-1]'>
+            <div class="indexSize">&raquo;</div>
+        </button>
     </footer>
 </div>
 <router-outlet></router-outlet>
+
+
 
 <!-- The Modal -->
 

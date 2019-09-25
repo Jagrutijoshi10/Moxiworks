@@ -41,9 +41,12 @@ tr.normal{
 .placeright{
    text-align: right
 }
+.placeleft{
+    text-align: left
+ }
 .example-form {
-    min-width: 150px;
-    max-width: 1500px;
+    min-width: 250px;
+    max-width: 500px;
     width: 100%;
   }
 

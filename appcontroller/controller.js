@@ -29,7 +29,7 @@ module.exports = function (err) {
         var totalpagesInUrl = 1;
         // make this as a function with necessary params and return a callaback
          function first(currentPage, callback) {
-            // console.log("first");
+            console.log("first");
             // console.log(currentPage);
             // console.log(totalpagesInUrl);
             if(currentPage < totalpagesInUrl) {
@@ -49,9 +49,9 @@ module.exports = function (err) {
                 options.url = value;
                  
                  second(function(err, data){
-                    //  console.log("second callback");
+                     console.log("second callback");
                      third(function(err, data){
-                        // console.log("third callback");
+                        console.log("third callback");
                         // if(dynamicPageCount < totalpagesInUrl)
                         //     callback();
                         // else 
@@ -66,9 +66,9 @@ module.exports = function (err) {
 
         // make this as a function with necessary params and return a callaback
          function second(callback) {
-            // console.log("second",options);  
+            console.log("second",options);  
              request(options, function (err, response, body) {
-                //  console.log("request");
+                 console.log("request");
                 //  console.log("status code:", response.statusCode);
                 if (err) throw err;
                 let parsed_data = JSON.parse(body);
@@ -84,11 +84,10 @@ module.exports = function (err) {
                 //  return log;
                  callback();
             });
-                     
         }
 
          function third(callback) {
-            //  console.log("third");
+             console.log("third");
             // make this as a function with necessary params and return a callaback
             // console.log(log)
              con.getConnection(function (err) {
@@ -113,7 +112,7 @@ module.exports = function (err) {
                         // return result;
                         cb();                        
                     });
-                },callback); 
+                },callback()); 
             });
         }
         
@@ -127,7 +126,7 @@ module.exports = function (err) {
         //     // res.send();
         // })
         first(0, function(){
-            // console.log(" 1completed");
+            console.log(" 1completed");
             res.send({message:"data sent"})
         });
 
@@ -135,13 +134,13 @@ module.exports = function (err) {
 
     self.getrecords = (req, res) => {
         //select query
+
         var arr = [];
         let start = parseInt(req.query.start);
         let end = parseInt(req.query.end);
-
         con.query("SELECT * FROM agent", function (err, result, fields) {
             if (err) throw err;
-
+           
             for (let i = start; i < end; i++) {
                 arr.push(result[i]);
                 if (i == result.length) {
@@ -150,6 +149,8 @@ module.exports = function (err) {
             }
             res.send({ res: arr, length: result.length })
         });
+        console.log("status code:", res.statusCode);
+
     }
     return self;
 }();
