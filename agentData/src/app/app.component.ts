@@ -47,6 +47,7 @@ export class AppComponent implements OnInit {
             agentId: new FormControl('')
         });
         this.spinner.show();
+        
         this._http.post(`http://localhost:3000/api/data`, this.data)
             .pipe(
                 switchMap(() => {
@@ -123,8 +124,6 @@ export class AppComponent implements OnInit {
                 this.spinner.hide();
             });
         }
-
-
     }
     // getParams(info) {
 

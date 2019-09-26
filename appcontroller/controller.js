@@ -14,6 +14,7 @@ let options = {
 var mysql = require('mysql');
 var async = require("async");
 var con = mysql.createPool({
+    connectionLimit: 100,
     host: "127.0.0.1",
     user: "root",
     password: "root",
@@ -109,7 +110,8 @@ module.exports = function (err) {
                     con.query("INSERT IGNORE INTO agent VALUES ?", [values], function (err, result) {
                         // console.log("insetion completed with err:",err);
                         // if (err) throw err;
-                        // return result;
+                        console.log("inside mysql")
+                        // return result;                                   
                         cb();                        
                     });
                 },callback()); 
@@ -131,26 +133,36 @@ module.exports = function (err) {
         });
 
     }
-
     self.getrecords = (req, res) => {
         //select query
-
-        var arr = [];
-        let start = parseInt(req.query.start);
-        let end = parseInt(req.query.end);
-        con.query("SELECT * FROM agent", function (err, result, fields) {
-            if (err) throw err;
-           
-            for (let i = start; i < end; i++) {
-                arr.push(result[i]);
-                if (i == result.length) {
-                    break;
+        function getrecords(callback){
+            var arr = [];
+            con.getConnection(function (err) {
+                if (err) throw err;
+            let start = parseInt(req.query.start);
+            let end = parseInt(req.query.end);
+            console.log("start and end values",start,end)
+            con.query("SELECT * FROM agent", function (err, result, fields) {
+                if (err) throw err;
+                console.log("inside select mysql")
+                for (let i = start; i < end; i++) {
+                    arr.push(result[i]);
+                    if (i == result.length) {
+                        break;
+                    }
+                   
                 }
-            }
-            res.send({ res: arr, length: result.length })
-        });
-        console.log("status code:", res.statusCode);
-
+            console.log("array length",arr.length)
+            console.log("status code:", res.statusCode);
+                res.send({ res: arr, length: result.length })
+                callback();
+            });
+        })
+        }
+       getrecords(function(err,data){
+           console.log("finished")
+       })
     }
+  
     return self;
 }();
