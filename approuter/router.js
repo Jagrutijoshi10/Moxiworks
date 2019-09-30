@@ -9,4 +9,7 @@ const express = require('express'),
    router.get('/records',(req,res)=>{
        controller.getrecords(req,res);
    })
+   router.get('/allrecords',(req,res)=>{
+       controller.getAllRecords(req,res);
+   })
 module.exports=router;

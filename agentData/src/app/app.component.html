@@ -11,22 +11,29 @@
                         <form class="example-form">
                             <mat-form-field class="example-full-width" appearance="outline">
                                 <mat-label class="indexSize">Search</mat-label>
-                                <input matInput  [(ngModel)]="searchText" name="searchText">
+                                <input matInput [(ngModel)]="searchText" name="searchText">
                                 <span class="container" class="glyphicon glyphicon-search form-control-feedback"></span>
                             </mat-form-field>
                         </form>
                     </div>
+
+
+
                     <div class="col">
                         <div class="placeright">
-                            <mat-form-field appearance="outline">
-                                <mat-label class="indexSize">Select agents per page</mat-label>
-                                <mat-select [(value)]="selected" (selectionChange)="onLimitChange($event)">
-                                    <mat-option value="10">10</mat-option>
-                                    <mat-option value="15">15</mat-option>
-                                    <mat-option value="20">20</mat-option>
-                                    <mat-option value="25">25</mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                            <button type="button" (click)="downloadCSV()" class="btn btn-secondary btn-lg">Download CSV</button>
+                            <span style="margin-left:64px">
+                                <mat-form-field appearance="outline">
+                                    <mat-label class="indexSize">Select agents per page</mat-label>
+                                    <mat-select [(value)]="selected" (selectionChange)="onLimitChange($event)">
+                                        <mat-option value="10">10</mat-option>
+                                        <mat-option value="15">15</mat-option>
+                                        <mat-option value="20">20</mat-option>
+                                        <mat-option value="25">25</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </span>
+
                         </div>
                     </div>
                 </div>
@@ -63,25 +70,25 @@
             <!-- Position Column -->
             <ng-container matColumnDef="agent id">
                 <th mat-header-cell *matHeaderCellDef><b> Agent ID</b> </th>
-                <td mat-cell *matCellDef="let agent"> <b>{{ agent.moxi_works_agent_id }}</b></td>
+                <td mat-cell *matCellDef="let agent"  width="30%"> <b>{{ agent.moxi_works_agent_id }}</b></td>
             </ng-container>
 
             <!-- Name Column -->
             <ng-container matColumnDef="client office id">
                 <th mat-header-cell *matHeaderCellDef><b> Client Office ID </b></th>
-                <td mat-cell *matCellDef="let agent"> {{ agent.client_office_id}} </td>
+                <td mat-cell *matCellDef="let agent" width="20%"> {{ agent.client_office_id}} </td>
             </ng-container>
 
             <!-- Weight Column -->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef><b> Name </b></th>
-                <td mat-cell *matCellDef="let agent"> {{ agent.name }} </td>
+                <td mat-cell *matCellDef="let agent" width="20%"> {{ agent.name }} </td>
             </ng-container>
 
             <!-- Symbol Column -->
             <ng-container matColumnDef="email id">
                 <th mat-header-cell *matHeaderCellDef><b> Email ID</b> </th>
-                <td mat-cell *matCellDef="let agent"> {{ agent.primary_email_address}} </td>
+                <td mat-cell *matCellDef="let agent" width="30%"> {{ agent.primary_email_address}} </td>
             </ng-container>
             <!--  <tr *ngFor="let agent of agents  | filter:  searchText" ></tr> -->
 
@@ -91,11 +98,11 @@
             <p>{{row}}</p>
         </table>
 
-            <span *ngIf="(agents | filter: searchText).length === 0">
-                <p class="center">"No Exact matches"</p>
-            </span>
+        <span *ngIf="(agents | filter: searchText).length === 0">
+            <p class="center">"No Exact matches"</p>
+        </span>
 
-    
+
     </body><br /><br />
     <footer class="center" *ngIf="((agents | filter: searchText).length )!= 0">
         <button class="btn btn-outline-dark btn-lg" (click)="getnextpages(currentPage-1)"
