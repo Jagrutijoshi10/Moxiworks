@@ -43,7 +43,7 @@ module.exports = function (err) {
                 //delete all records
                 con.query("DELETE from agent where agent_id_from_url=?", moxiWorksAgentId, function (err, result) {
                     if (err) throw err;
-                    // console.log("Table id records deleted");
+                    console.log("Table id records deleted",moxiWorksAgentId);
                 });
 
             })

@@ -121,14 +121,14 @@ export class AppComponent implements OnInit {
             if (this.log.length < this.end) {
                 this.end = this.log.length;
             }
-            
+
             // console.log(i)
             // this._http.post('http://localhost:3000/api/data', this.data).subscribe(agent_data => {
             //     this.log = agent_data;
             //     this.agents = this.log.res;
             //     this.pageNumber=i+1;
             //     this.spinner.hide();
-            // })
+            // })            
 
             this._http.get(`http://localhost:3000/api/records?start=${this.start}&end=${this.end}`).subscribe((agent_data:any) => {
                 this.log = agent_data;
