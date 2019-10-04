@@ -131,6 +131,18 @@ self.getrecords = (req, res) => {
         res.send({ res: arr, length: result.length })
     });
 }
+self.getAllRecords = (req, res) => {
+    con.getConnection(function (err) {
+        if (err) throw err;
+        // console.log("start and end values",start,end)
+        con.query("SELECT * FROM agent where agent_id_from_url=?", moxiWorksAgentId, function (err, result, fields) {
+            if (err) throw err;
+            res.send(result)
+
+        });
+    })
+
+}
     return self;
 }();
 
