@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
         title: 'Agent List :',
         useBom: true,
         noDownload: false,
-        headers: ["moxi_works_agent_id", "client_agent_id", "mls_agent_id", "license", "mls_name", "mls_abbreviation", "moxi_works_office_id", "office_id", "client_office_id", "company_id", "client_company_id", "office_address_street", "office_address_street2", "office_address_city", "office_address_state", "office_address_zip", "name", "first_name", "last_name", "nickname", "mobile_phone_number", "alt_phone_number", "fax_phone_number", "main_phone_number", "office_phone_number", "primary_email_address", "secondary_email_address", "lead_routing_email_address", "title", "uuid", "has_product_access", "has_engage_access", "access_level", "website_base_url", "twitter", "google_plus", "facebook", "instagram", "blogger", "youtube", "linked_in", "pinterest", "home_page", "profile_image_url", "profile_thumb_url", "region", "created_timestamp", "deactivated_timestamp"]
+        headers: ["MOXI-WORKS AGENT ID", "CLIENT AGENT ID", "MLS AGENT ID", "LICENCE", "MLS NAME", "MLS ABBREVIATION", "MOXI-WORKS OFFICE ID", "OFFICE ID", "CLIENT OFFICE ID", "COMPANY ID", "CLIENT COMPANY ID", "OFFICE ADDRESS STREET", "OFFICE ADDRESS STREET 2", "OFFICE ADDRESS CITY", "OFFICE ADDRESS STATE", "OFFICE ADDRESS ZIP", "NAME", "FIRST NAME", "LAST NAME", "NICKNAME", "MOBILE PHONE NUMBER", "ALT PHONE NUMBER", "FAX PHONE NUMBER", "MAIN PHONE NUMBER", "OFFICE PHONE NUMBER", "PRIMARY EMAIL ID", "SECONDARY EMAIL ADDRESS", "LEAD ROUTING EMAIL ADDRESS", "TITLE", "UUID", "HAS-PRODUCT-ACCESS", "HAS-ENGAGE-ACCESS", "ACCESS LEVEL", "WEBSITE BASE URL", "TWITTER", "GOOGLE PLUS", "FACEBOOK", "INSTAGRAM", "BLOGGER", "YOUTUBE", "LINKED_IN", "PINTEREST", "HOME_PAGE", "PROFILE IMAGE URL", "PROFILE THUMB URL", "REGION", "CREATED_TIMESTAMP", "DEACTIVATED_TIMESTAMP","AGENT ID FROM URL"]
     };
 
     // companyId: any = 'moxi_works';
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
                 this.log = agent_data;
                 this.agents = this.log.res;
                 // console.log(this.agents);
-                // console.log(this.log.length)
+                console.log(this.log.length)
                 for (let i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
                     this.pages.push(i);
                 }
@@ -156,8 +156,7 @@ export class AppComponent implements OnInit {
         this.agentName = this.details.name;
     }
 
-    downloadCSV() {
-       
+    downloadCSV() {   
         this._http.get(`http://localhost:3000/api/allrecords`).subscribe((dwndata: any) => {
             this.downloadedData = dwndata;
             console.log(this.downloadedData);

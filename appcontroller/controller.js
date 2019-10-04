@@ -21,23 +21,21 @@ module.exports = function (err) {
             con.getConnection(function (err) {
                 if (err) throw err;
                 //create table
-                var sql = "CREATE TABLE IF NOT EXISTS agent (moxi_works_agent_id varchar(200) PRIMARY KEY,client_agent_id varchar(200),mls_agent_id varchar(200),license varchar(200),mls_name varchar(200),mls_abbreviation varchar(200),moxi_works_office_id varchar(200),office_id varchar(200),client_office_id varchar(200),company_id varchar(200),client_company_id varchar(200),office_address_street varchar(200),office_address_street2 varchar(200),office_address_city varchar(200),office_address_state varchar(200),office_address_zip varchar(200),name varchar(200),first_name varchar(200),last_name varchar(200),nickname varchar(200),mobile_phone_number varchar(200),alt_phone_number varchar(200),fax_phone_number varchar(200),main_phone_number varchar(200),office_phone_number varchar(200),primary_email_address varchar(200),secondary_email_address varchar(200),lead_routing_email_address varchar(200),title varchar(200),uuid varchar(200),has_product_access varchar(200),has_engage_access varchar(200),access_level varchar(200),website_base_url varchar(200),twitter varchar(200),google_plus varchar(200),facebook varchar(200),instagram varchar(200),blogger varchar(200),youtube varchar(200),linked_in varchar(200),pinterest varchar(200),home_page varchar(200),profile_image_url varchar(200),profile_thumb_url varchar(200),region varchar(200),created_timestamp varchar(200),deactivated_timestamp varchar(200),agent_id_from_url varchar(255))";
-
+                var sql = "CREATE TABLE IF NOT EXISTS agent (moxi_works_agent_id varchar(200) PRIMARY KEY,client_agent_id varchar(200),mls_agent_id varchar(200),license varchar(200),mls_name varchar(200),mls_abbreviation varchar(200),moxi_works_office_id varchar(200),office_id varchar(200),client_office_id varchar(200),company_id varchar(200),client_company_id varchar(200),office_address_street varchar(200),office_address_street2 varchar(200),office_address_city varchar(200),office_address_state varchar(200),office_address_zip varchar(200),name varchar(200),first_name varchar(200),last_name varchar(200),nickname varchar(200),mobile_phone_number varchar(200),alt_phone_number varchar(200),fax_phone_number varchar(200),main_phone_number varchar(200),office_phone_number varchar(200),primary_email_address varchar(200),secondary_email_address varchar(200),lead_routing_email_address varchar(200),title varchar(200),uuid varchar(200),has_product_access varchar(200),has_engage_access varchar(200),access_level varchar(200),website_base_url varchar(200),twitter varchar(200),google_plus varchar(200),facebook varchar(200),instagram varchar(200),blogger varchar(200),youtube varchar(200),linked_in varchar(200),pinterest varchar(200),home_page varchar(200),profile_image_url varchar(200),profile_thumb_url varchar(200),region varchar(200),created_timestamp varchar(200),deactivated_timestamp varchar(200),agent_id_from_url varchar(255));";
                 con.query(sql, function (err, result) {
                     if (err) throw err;
-                    console.log("Table created");
+                    // console.log("Table created");
                 });
-
                 //delete all records
                 con.query("DELETE from agent where agent_id_from_url=?", moxiWorksAgentId, function (err, result) {
                     if (err) throw err;
-                    console.log("Table id records deleted");
+                    // console.log("Table id records deleted");
                 });
 
             })
         }
         sqlStatementsInitial();
-        // make this as a function with necessary params and return a callaback
+        
         function getDataForUrl(currentPage, callback) {
             // console.log("first");
             if (currentPage < totalpagesInUrl) {
@@ -46,14 +44,9 @@ module.exports = function (err) {
                 let url1 = 'https://api.moxiworks.com/api/agents/?';
                 moxiWorksAgentId = req.body.moxi_works_agent_id;
                 let data = JSON.stringify(req.body);
-
-                for (let i = 0; i < data.length; i++) {
-                    data = data.replace(',', '&');
-                    data = data.replace(':', '=');
-                    data = data.replace('{', '');
-                    data = data.replace('}', '');
-                    data = data.replace('"', '');
-                }
+                data = data.replace(/:/g, "=");
+                data = data.replace(/,/g, "&");
+                data = data.replace(/,|{|}|"/g, "");
                 var url = "url";
                 let value = url1 + data;
                 options.url = value;
@@ -61,7 +54,6 @@ module.exports = function (err) {
                     //  console.log("second callback");
                     sqlStatements(function (err, data) {
                         // console.log("third callback");
-
                         getDataForUrl(currentPage, callback);
                     });
                 })
@@ -70,9 +62,7 @@ module.exports = function (err) {
             }
         }
 
-        // make this as a function with necessary params and return a callaback
         function getBodyFromUrl(callback) {
-            // console.log("gettinng options",options);  
             request(options, function (err, response, body) {
                 //  console.log("request");
                 if (err) throw err;
@@ -81,13 +71,9 @@ module.exports = function (err) {
                 // console.log('parsed_data.total_pages:',parsed_data.total_pages);
                 totalpagesInUrl = total_pages;
                 log = parsed_data["agents"];
-
-                //  return log;
                 callback();
             });
         }
-
-
 
         function sqlStatements(callback) {
             //  console.log("third");
@@ -103,14 +89,14 @@ module.exports = function (err) {
                         if (err) throw err;
                         cb();
                     });
-                }, callback());
+                });
+                callback()
             });
         }
         getDataForUrl(0, function () {
-            // console.log(" 1completed");
+            console.log(" 1completed");
             res.send({ message: "data sent" })
         });
-
     }
     self.getrecords = (req, res) => {
         //select query
@@ -120,6 +106,7 @@ module.exports = function (err) {
                 if (err) throw err;
                 let start = parseInt(req.query.start);
                 let end = parseInt(req.query.end);
+                console.log(start,end)
                 con.query("SELECT * FROM agent where agent_id_from_url=?", moxiWorksAgentId, function (err, result, fields) {
                     if (err) throw err;
                     for (let i = start; i < end; i++) {
@@ -127,7 +114,6 @@ module.exports = function (err) {
                         if (i === result.length) {
                             break;
                         }
-
                     }
                     res.send({ res: arr, length: result.length })
                     callback();
@@ -135,7 +121,7 @@ module.exports = function (err) {
             })
         }
         getrecords(function (err, data) {
-            //    console.log("finished")
+               console.log("finished")
         })
     }
     self.getAllRecords = (req, res) => {
@@ -144,11 +130,8 @@ module.exports = function (err) {
             con.query("SELECT * FROM agent where agent_id_from_url=?", moxiWorksAgentId, function (err, result, fields) {
                 if (err) throw err;
                 res.send(result)
-
             });
         })
-
     }
-
     return self;
 }();
