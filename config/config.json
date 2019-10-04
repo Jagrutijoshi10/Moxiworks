@@ -1,0 +1,20 @@
+{
+        "credentials" : {
+            "connectionLimit": 100,
+            "host": "127.0.0.1",
+            "user": "root",
+            "password": "root",
+            "database": "moxiWorks"
+        },
+        "option" : {
+            "method": "GET",
+            "headers": {
+                "Authorization": "Basic OTJlNWFiNWUtOWM4Zi0xMWU2LTgxMDUtMDA1MDU2OWMxMTlhOjVIZ1RhR1FIMm9PZVQ5Y3hmWHU2Ymd0dA==",
+                "AccessControlAllowCredentials": "true",
+                "contentType": "application/json",
+                "Accept": "application/vnd.moxi-platform+json;version:1",
+                "json": "true"
+            }
+        }
+    
+}

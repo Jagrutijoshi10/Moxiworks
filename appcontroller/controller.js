@@ -1,25 +1,13 @@
 "use strict";
-const request = require('request');
-const _ = require('underscore')
-let options = {
-    method: 'GET',
-    headers: {
-        Authorization: "Basic OTJlNWFiNWUtOWM4Zi0xMWU2LTgxMDUtMDA1MDU2OWMxMTlhOjVIZ1RhR1FIMm9PZVQ5Y3hmWHU2Ymd0dA==",
-        AccessControlAllowCredentials: 'true',
-        contentType: 'application/json',
-        Accept: 'application/vnd.moxi-platform+json;version:1',
-        json: 'true'
-    },
-}
-var mysql = require('mysql');
-var async = require("async");
-var con = mysql.createPool({
-    connectionLimit: 100,
-    host: "127.0.0.1",
-    user: "root",
-    password: "root",
-    database: "moxiWorks"
-});
+const request = require('request'),
+    _ = require('underscore'),
+    async = require("async"),
+    mysql = require('mysql'),
+    config = require('../config/config.json'),
+    connection = config.credentials,
+    con = mysql.createPool(connection),
+    options = config.option;
+
 
 module.exports = function (err) {
     if (err) throw err;
@@ -37,9 +25,9 @@ module.exports = function (err) {
 
                 con.query(sql, function (err, result) {
                     if (err) throw err;
-                    // console.log("Table created");
+                    console.log("Table created");
                 });
-              
+
                 //delete all records
                 con.query("DELETE from agent where agent_id_from_url=?", moxiWorksAgentId, function (err, result) {
                     if (err) throw err;
@@ -52,8 +40,6 @@ module.exports = function (err) {
         // make this as a function with necessary params and return a callaback
         function getDataForUrl(currentPage, callback) {
             // console.log("first");
-            // console.log(currentPage);
-            // console.log(totalpagesInUrl);
             if (currentPage < totalpagesInUrl) {
                 currentPage++;
                 req.body["page_number"] = currentPage;
@@ -103,25 +89,18 @@ module.exports = function (err) {
 
 
 
-        // sqlStatementsInitial(function(){
-        //     console.log("extra function")
-        // });
-
         function sqlStatements(callback) {
             //  console.log("third");
             con.getConnection(function (err) {
                 if (err) throw err;
-                // ? modify to async.each =? in finallcallba use cb();
                 async.each(log, (i, cb) => {
                     let values = [];
                     values.push([i.moxi_works_agent_id, i.client_agent_id, i.mls_agent_id, i.license, i.mls_name, i.mls_abbreviation, i.moxi_works_office_id, i.office_id, i.client_office_id, i.company_id, i.client_company_id, i.office_address_street, i.office_address_street2, i.office_address_city, i.office_address_state, i.office_address_zip, i.name, i.first_name, i.last_name, i.nickname, i.mobile_phone_number, i.alt_phone_number, i.fax_phone_number, i.main_phone_number, i.office_phone_number, i.primary_email_address, i.secondary_email_address, i.lead_routing_email_address, i.title, i.uuid, i.has_product_access, i.has_engage_access, i.access_level, i.website_base_url, i.twitter, i.google_plus, i.facebook, i.instagram, i.blogger, i.youtube, i.linked_in, i.pinterest, i.home_page, i.profile_image_url, i.profile_thumb_url, i.region, i.created_timestamp, i.deactivated_timestamp, moxiWorksAgentId]);
 
                     // insert query  
                     con.query("REPLACE INTO agent VALUES ?", [values], function (err, result) {
-                        console.log("insetion completed with err:",err);
+                        console.log("insetion completed with err:", err);
                         if (err) throw err;
-                        // console.log("inside insert")
-                        // return result;                                   
                         cb();
                     });
                 }, callback());
@@ -141,10 +120,8 @@ module.exports = function (err) {
                 if (err) throw err;
                 let start = parseInt(req.query.start);
                 let end = parseInt(req.query.end);
-                // console.log("start and end values",start,end)
                 con.query("SELECT * FROM agent where agent_id_from_url=?", moxiWorksAgentId, function (err, result, fields) {
                     if (err) throw err;
-                    // console.log("inside select mysql")
                     for (let i = start; i < end; i++) {
                         arr.push(result[i]);
                         if (i === result.length) {
@@ -158,13 +135,12 @@ module.exports = function (err) {
             })
         }
         getrecords(function (err, data) {
-               console.log("finished")
+            //    console.log("finished")
         })
     }
     self.getAllRecords = (req, res) => {
         con.getConnection(function (err) {
             if (err) throw err;
-            // console.log("start and end values",start,end)
             con.query("SELECT * FROM agent where agent_id_from_url=?", moxiWorksAgentId, function (err, result, fields) {
                 if (err) throw err;
                 res.send(result)

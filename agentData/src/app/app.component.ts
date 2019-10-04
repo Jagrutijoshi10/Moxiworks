@@ -71,13 +71,13 @@ export class AppComponent implements OnInit {
             ).subscribe((agent_data: any) => {
                 this.log = agent_data;
                 this.agents = this.log.res;
-                console.log(this.agents);
-                console.log(this.log.length)
+                // console.log(this.agents);
+                // console.log(this.log.length)
                 for (let i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
                     this.pages.push(i);
                 }
             });
-        console.log("on load pages", this.pages)
+       
     }
     onLimitChange(event) {
         this.spinner.show();
@@ -97,7 +97,6 @@ export class AppComponent implements OnInit {
                 this.spinner.hide();
             });
         }
-        console.log(this.log.length)
     }
     getnextpages(i) {
         this.spinner.show();
@@ -129,7 +128,6 @@ export class AppComponent implements OnInit {
                 this.spinner.hide();
             });
         }
-        console.log(this.log.length);
     }
     // getParams(info) {
 
