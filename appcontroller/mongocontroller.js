@@ -21,6 +21,8 @@ module.exports = function (err) {
 
         var totalpagesInUrl = 1;
         function sqlStatementsInitial() {
+            var myquery = { moxi_works_id_from_url: moxiWorksAgentId };
+
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
 
@@ -28,6 +30,11 @@ module.exports = function (err) {
                     if (err) throw err;
                     console.log("Collection created!");
                     db.close();
+                });
+                dbo.collection("agents").deleteOne(myquery, function(err, obj) {
+                  if (err) throw err;
+                  console.log("all document deleted");
+                  db.close();
                 });
             });
         }
@@ -129,7 +136,7 @@ module.exports = function (err) {
                         deactivated_timestamp: i.deactivated_timestamp,
                         moxi_works_id_from_url: moxiWorksAgentId
                     }
-                    dbo.collection("customers").insertMany(values, function (err, res) {
+                    dbo.collection("agents").insertMany(values, function (err, res) {
                         if (err) throw err;
                         console.log("Number of documents inserted: " + res.insertedCount);
                         db.close();
@@ -149,12 +156,24 @@ module.exports = function (err) {
     self.getrecords = (req, res) => {
         //select query
         function getrecords(callback) {
-            var arr = [];
-
             let start = parseInt(req.query.start);
             let end = parseInt(req.query.end);
             console.log(start, end)
-
+            var arr = [];
+            MongoClient.connect(url, function(err, db) {
+                if (err) throw err;
+                dbo.collection("agents").find({}).toArray(function(err, result) {
+                  if (err) throw err;
+                  for (let i = start; i < end; i++) {
+                    arr.push(result[i]);
+                    if (i === result.length) {
+                        break;
+                    }
+                }
+                  console.log(result);
+                  db.close();
+                });
+              });
             res.send({ res: arr, length: result.length })
             callback();
 
@@ -165,7 +184,14 @@ module.exports = function (err) {
         })
     }
     self.getAllRecords = (req, res) => {
-
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            dbo.collection("agents").find({}).toArray(function(err, result) {
+              if (err) throw err;
+              console.log(result);
+              db.close();
+            });
+          });
     }
     return self;
 }();
