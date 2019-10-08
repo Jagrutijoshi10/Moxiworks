@@ -77,8 +77,7 @@ export class AppComponent implements OnInit {
                     this.pages.push(i);
                 }
             });
-       
-    }
+            }
     onLimitChange(event) {
         this.spinner.show();
         this.selectedLimit = event.value;

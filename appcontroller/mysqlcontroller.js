@@ -8,7 +8,6 @@ const request = require('request'),
     con = mysql.createPool(connection),
     options = config.option;
 
-
 module.exports = function (err) {
     if (err) throw err;
     let self = {};
@@ -77,6 +76,7 @@ module.exports = function (err) {
 
         function sqlStatements(callback) {
             //  console.log("third");
+         
             con.getConnection(function (err) {
                 if (err) throw err;
                 async.each(log, (i, cb) => {
@@ -85,7 +85,7 @@ module.exports = function (err) {
 
                     // insert query  
                     con.query("REPLACE INTO agent VALUES ?", [values], function (err, result) {
-                        console.log("insetion completed with err:", err);
+                        // console.log("insetion completed with err:", err);
                         if (err) throw err;
                         cb();
                     });

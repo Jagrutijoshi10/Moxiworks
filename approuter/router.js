@@ -1,7 +1,7 @@
 "use strict";
 const express = require('express'),
     router = express.Router(),
-   controller=require('../appcontroller/controller');
+   controller=require('../appcontroller/mongocontroller');
 
    router.post('/data',(req,res)=>{
        controller.getdata(req,res);
