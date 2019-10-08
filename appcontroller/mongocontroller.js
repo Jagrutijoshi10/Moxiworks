@@ -7,11 +7,11 @@ const request = require('request'),
     connection = config.credentials,
     con = mysql.createPool(connection),
     options = config.option,
-     MongoClient = require('mongodb').MongoClient,
-     url = "mongodb://localhost:27017/";
-     var dbo = db.db("mydb");
-    
-   
+    MongoClient = require('mongodb').MongoClient,
+    url = "mongodb://localhost:27017/";
+var dbo = db.db("mydb");
+
+
 module.exports = function (err) {
     if (err) throw err;
     let self = {};
@@ -21,18 +21,18 @@ module.exports = function (err) {
 
         var totalpagesInUrl = 1;
         function sqlStatementsInitial() {
-            MongoClient.connect(url, function(err, db) {
+            MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
-               
-                dbo.createCollection("agents", function(err, res) {
-                  if (err) throw err;
-                  console.log("Collection created!");
-                  db.close();
+
+                dbo.createCollection("agents", function (err, res) {
+                    if (err) throw err;
+                    console.log("Collection created!");
+                    db.close();
                 });
-              });
+            });
         }
         sqlStatementsInitial();
-        
+
         function getDataForUrl(currentPage, callback) {
             // console.log("first");
             if (currentPage < totalpagesInUrl) {
@@ -74,69 +74,72 @@ module.exports = function (err) {
 
         function sqlStatements(callback) {
             //  console.log("third");
-         
-            MongoClient.connect(url, function(err, db) {
+
+            MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
-                let values = {};
-                values.push([i.moxi_works_agent_id, 
-                    i.client_agent_id, i.mls_agent_id,
-                     i.license, i.mls_name,
-                      i.mls_abbreviation,
-                      i.moxi_works_office_id,
-                       i.office_id, 
-                       i.client_office_id,
-                       i.company_id,
-                        i.client_company_id,
-                         i.office_address_street,
-                          i.office_address_street2,
-                           i.office_address_city,
-                           i.office_address_state,
-                            i.office_address_zip,
-                            i.name, i.first_name,
-                             i.last_name,
-                             i.nickname,
-                              i.mobile_phone_number,
-                              i.alt_phone_number,
-                               i.fax_phone_number,
-                               i.main_phone_number,
-                               i.office_phone_number,
-                                i.primary_email_address,
-                                i.secondary_email_address,
-                                 i.lead_routing_email_address,
-                                  i.title,
-                                   i.uuid, 
-                                   i.has_product_access,
-                                   i.has_engage_access,
-                                    i.access_level, 
-                                    i.website_base_url,
-                                    i.twitter, 
-                                    i.google_plus,
-                                    i.facebook,
-                                     i.instagram,
-                                     i.blogger,
-                                      i.youtube,
-                                       i.linked_in,
-                                       i.pinterest,
-                                        i.home_page,
-                                         i.profile_image_url,
-                                         i.profile_thumb_url,
-                                         i.region,
-                                          i.created_timestamp,
-                                           i.deactivated_timestamp,
-                                           moxiWorksAgentId]);
-                var myobj = { name: "Company Inc", address: "Highway 37" };
                 async.each(log, (i, cb) => {
-                    dbo.collection("customers").insertMany(myobj, function(err, res) {
+                    let values = {
+                        moxi_works_agent_id: i.moxi_works_agent_id,
+                        client_agent_id: i.client_agent_id,
+                        mls_agent_id: i.mls_agent_id,
+                        license: i.license,
+                        mls_name: i.mls_name,
+                        mls_abbreviation: i.mls_abbreviation,
+                        moxi_works_office_id: i.moxi_works_office_id,
+                        office_id: i.office_id,
+                        client_office_id: i.client_office_id,
+                        company_id: i.company_id,
+                        client_company_id: i.client_company_id,
+                        office_address_street: i.office_address_street,
+                        office_address_street2: i.office_address_street2,
+                        office_address_city: i.office_address_city,
+                        office_address_state: i.office_address_state,
+                        office_address_zip: i.office_address_zip,
+                        name: i.name,
+                        first_name: i.first_name,
+                        last_name: i.last_name,
+                        nickname: i.nickname,
+                        mobile_phone_number: i.mobile_phone_number,
+                        alt_phone_number: i.alt_phone_number,
+                        fax_phone_number: i.fax_phone_number,
+                        main_phone_number: i.main_phone_number,
+                        office_phone_number: i.office_phone_number,
+                        primary_email_address: i.primary_email_address,
+                        secondary_email_address: i.secondary_email_address,
+                        lead_routing_email_address: i.lead_routing_email_address,
+                        title: i.title,
+                        uuid: i.uuid,
+                        has_product_access: i.has_product_access,
+                        has_engage_access: i.has_engage_access,
+                        access_level: i.access_level,
+                        website_base_url: i.website_base_url,
+                        twitter: i.twitter,
+                        google_plus: i.google_plus,
+                        facebook: i.facebook,
+                        instagram: i.instagram,
+                        blogger: i.blogger,
+                        youtube: i.youtube,
+                        linked_in: i.linked_in,
+                        pinterest: i.pinterest,
+                        home_page: i.home_page,
+                        profile_image_url: i.profile_image_url,
+                        profile_thumb_url: i.profile_thumb_url,
+                        region: i.region,
+                        created_timestamp: i.created_timestamp,
+                        deactivated_timestamp: i.deactivated_timestamp,
+                        moxi_works_id_from_url: moxiWorksAgentId
+                    }
+                    dbo.collection("customers").insertMany(values, function (err, res) {
                         if (err) throw err;
                         console.log("Number of documents inserted: " + res.insertedCount);
                         db.close();
-                      });
+                    });
                 });
-               
-              });
-               
-                callback()
-            
+
+            });
+
+            callback()
+
         }
         getDataForUrl(0, function () {
             console.log(" 1completed");
@@ -147,22 +150,22 @@ module.exports = function (err) {
         //select query
         function getrecords(callback) {
             var arr = [];
-           
-                let start = parseInt(req.query.start);
-                let end = parseInt(req.query.end);
-                console.log(start,end)
-              
-                    res.send({ res: arr, length: result.length })
-                    callback();
-                
-        
+
+            let start = parseInt(req.query.start);
+            let end = parseInt(req.query.end);
+            console.log(start, end)
+
+            res.send({ res: arr, length: result.length })
+            callback();
+
+
         }
         getrecords(function (err, data) {
-               console.log("finished")
+            console.log("finished")
         })
     }
     self.getAllRecords = (req, res) => {
-      
+
     }
     return self;
 }();
