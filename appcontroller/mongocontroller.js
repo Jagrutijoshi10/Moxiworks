@@ -9,7 +9,6 @@ const request = require('request'),
     options = config.option,
     MongoClient = require('mongodb').MongoClient,
     url = "mongodb://localhost:27017/";
-var dbo = db.db("mydb");
 
 
 module.exports = function (err) {
@@ -21,21 +20,23 @@ module.exports = function (err) {
 
         var totalpagesInUrl = 1;
         function sqlStatementsInitial() {
-            var myquery = { moxi_works_id_from_url: moxiWorksAgentId };
 
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
+                var dbo = db.db("mydb");
 
                 dbo.createCollection("agents", function (err, res) {
-                    if (err) throw err;
+                    if (err) throw err; 
                     console.log("Collection created!");
                     db.close();
                 });
-                dbo.collection("agents").deleteOne(myquery, function(err, obj) {
-                  if (err) throw err;
-                  console.log("all document deleted");
-                  db.close();
-                });
+            var myquery = { moxi_works_id_from_url: moxiWorksAgentId };
+
+                dbo.collection("agents").deleteMany(myquery, function(err, obj) {
+                    if (err) throw err;
+                    console.log(obj.result.n + " document(s) deleted");
+                    db.close();
+                  });
             });
         }
         sqlStatementsInitial();
@@ -81,11 +82,14 @@ module.exports = function (err) {
 
         function sqlStatements(callback) {
             //  console.log("third");
-
+            let values;
             MongoClient.connect(url, function (err, db) {
+                var dbo = db.db("mydb");
+
                 if (err) throw err;
                 async.each(log, (i, cb) => {
-                    let values = {
+                    // console.log(log)
+                     values=[{
                         moxi_works_agent_id: i.moxi_works_agent_id,
                         client_agent_id: i.client_agent_id,
                         mls_agent_id: i.mls_agent_id,
@@ -135,17 +139,19 @@ module.exports = function (err) {
                         created_timestamp: i.created_timestamp,
                         deactivated_timestamp: i.deactivated_timestamp,
                         moxi_works_id_from_url: moxiWorksAgentId
-                    }
+                    }];
                     dbo.collection("agents").insertMany(values, function (err, res) {
                         if (err) throw err;
                         console.log("Number of documents inserted: " + res.insertedCount);
                         db.close();
+                        cb();
                     });
                 });
-
+                callback()
+         
             });
-
-            callback()
+           
+           
 
         }
         getDataForUrl(0, function () {
@@ -162,22 +168,17 @@ module.exports = function (err) {
             var arr = [];
             MongoClient.connect(url, function(err, db) {
                 if (err) throw err;
-                dbo.collection("agents").find({}).toArray(function(err, result) {
+                var dbo = db.db("mydb");
+
+                dbo.collection("agents").find().toArray(function(err, result) {
                   if (err) throw err;
-                  for (let i = start; i < end; i++) {
-                    arr.push(result[i]);
-                    if (i === result.length) {
-                        break;
-                    }
-                }
-                  console.log(result);
+                res.send({ res: result, length: result.length })
                   db.close();
                 });
+
               });
-            res.send({ res: arr, length: result.length })
+            
             callback();
-
-
         }
         getrecords(function (err, data) {
             console.log("finished")
@@ -186,9 +187,11 @@ module.exports = function (err) {
     self.getAllRecords = (req, res) => {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
+            var dbo = db.db("mydb");
+
             dbo.collection("agents").find({}).toArray(function(err, result) {
               if (err) throw err;
-              console.log(result);
+              res.send(result)
               db.close();
             });
           });
