@@ -27,14 +27,14 @@ module.exports = function (err) {
 
                 dbo.createCollection("agents", function (err, res) {
                     if (err) throw err;
-                    console.log("Collection created!");
+                    // console.log("Collection created!");
                     db.close();
                 });
                 var myquery = { moxi_works_id_from_url: moxiWorksAgentId };
 
                 dbo.collection("agents").deleteMany(myquery, function (err, obj) {
                     if (err) throw err;
-                    console.log(obj.result.n + " document(s) deleted");
+                    // console.log(obj.result.n + " document(s) deleted");
                     db.close();
                 });
             });
@@ -42,8 +42,8 @@ module.exports = function (err) {
         sqlStatementsInitial();
 
       function getDataForUrl(currentPage, callback) {
-            console.log("first");
-            if (totalpagesInUrl >= currentPage) {
+            // console.log("first");
+            if (currentPage <= totalpagesInUrl) {
                 currentPage++;
                 req.body["page_number"] = currentPage;
                 let url1 = 'https://api.moxiworks.com/api/agents/?';
@@ -56,33 +56,33 @@ module.exports = function (err) {
                 let value = url1 + data;
                 options.url = value;
                 getBodyFromUrl( function (err, data) {
-                     console.log("second callback");
+                    //  console.log("second callback");
                     sqlStatements( function (err, data) {
-                        console.log("third callback");
+                        // console.log("third callback");
                         getDataForUrl(currentPage, callback);
                     });
                 })
             } else {
                 callback();
-                console.log("response sent")
+                // console.log("response sent")
             }
         }
 
         function getBodyFromUrl(callback) {
             request(options, function (err, response, body) {
-                 console.log("request");
+                //  console.log("request");
                 if (err) throw err;
                 let parsed_data = JSON.parse(body);
-                const total_pages = parsed_data.total_pages;
+                // const total_pages = parsed_data.total_pages;
                 // console.log('parsed_data.total_pages:',parsed_data.total_pages);
-                totalpagesInUrl = total_pages;
+                totalpagesInUrl = parsed_data.total_pages;;
                 log = parsed_data["agents"];
                 callback();
             });
         }
 
             function sqlStatements(callback) {
-             console.log("third");
+            //  console.log("third");
            
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
@@ -143,7 +143,7 @@ module.exports = function (err) {
                     }];
                     dbo.collection("agents").insertMany(values, function (err, res) {
                         if (err) throw err;
-                        console.log("Number of documents inserted: " + res.insertedCount);
+                        // console.log("Number of documents inserted: " + res.insertedCount);
                        
                         db.close();
                          cb();
@@ -155,7 +155,7 @@ module.exports = function (err) {
            
         }
         getDataForUrl(0, function () {
-            console.log(" 1completed");
+            // console.log(" 1completed");
             res.send({ message: "data sent" })
         });
     }
@@ -164,7 +164,7 @@ module.exports = function (err) {
         function getrecords(callback) {
             let start = parseInt(req.query.start);
             let end = parseInt(req.query.end);
-            console.log(start, end)
+            // console.log(start, end)
             var arr = [];
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
@@ -188,7 +188,7 @@ module.exports = function (err) {
 
         }
         getrecords(function (err, data) {
-            console.log("finished")
+            // console.log("finished")
         })
     }
     self.getAllRecords = (req, res) => {
