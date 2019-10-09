@@ -26,24 +26,24 @@ module.exports = function (err) {
                 var dbo = db.db("mydb");
 
                 dbo.createCollection("agents", function (err, res) {
-                    if (err) throw err; 
+                    if (err) throw err;
                     console.log("Collection created!");
                     db.close();
                 });
-            var myquery = { moxi_works_id_from_url: moxiWorksAgentId };
+                var myquery = { moxi_works_id_from_url: moxiWorksAgentId };
 
-                dbo.collection("agents").deleteMany(myquery, function(err, obj) {
+                dbo.collection("agents").deleteMany(myquery, function (err, obj) {
                     if (err) throw err;
                     console.log(obj.result.n + " document(s) deleted");
                     db.close();
-                  });
+                });
             });
-        }
+        }   
         sqlStatementsInitial();
 
-        function getDataForUrl(currentPage, callback) {
-            // console.log("first");
-            if (currentPage < totalpagesInUrl) {
+      function getDataForUrl(currentPage, callback) {
+            console.log("first");
+            if (totalpagesInUrl >= currentPage) {
                 currentPage++;
                 req.body["page_number"] = currentPage;
                 let url1 = 'https://api.moxiworks.com/api/agents/?';
@@ -55,21 +55,22 @@ module.exports = function (err) {
                 var url = "url";
                 let value = url1 + data;
                 options.url = value;
-                getBodyFromUrl(function (err, data) {
-                    //  console.log("second callback");
-                    sqlStatements(function (err, data) {
-                        // console.log("third callback");
+                getBodyFromUrl( function (err, data) {
+                     console.log("second callback");
+                    sqlStatements( function (err, data) {
+                        console.log("third callback");
                         getDataForUrl(currentPage, callback);
                     });
                 })
             } else {
                 callback();
+                console.log("response sent")
             }
         }
 
         function getBodyFromUrl(callback) {
             request(options, function (err, response, body) {
-                //  console.log("request");
+                 console.log("request");
                 if (err) throw err;
                 let parsed_data = JSON.parse(body);
                 const total_pages = parsed_data.total_pages;
@@ -80,16 +81,16 @@ module.exports = function (err) {
             });
         }
 
-        function sqlStatements(callback) {
-            //  console.log("third");
-            let values;
+            function sqlStatements(callback) {
+             console.log("third");
+           
             MongoClient.connect(url, function (err, db) {
-                var dbo = db.db("mydb");
-
                 if (err) throw err;
+                var dbo = db.db("mydb");
+                let values;
                 async.each(log, (i, cb) => {
                     // console.log(log)
-                     values=[{
+                    values = [{
                         moxi_works_agent_id: i.moxi_works_agent_id,
                         client_agent_id: i.client_agent_id,
                         mls_agent_id: i.mls_agent_id,
@@ -143,16 +144,15 @@ module.exports = function (err) {
                     dbo.collection("agents").insertMany(values, function (err, res) {
                         if (err) throw err;
                         console.log("Number of documents inserted: " + res.insertedCount);
+                       
                         db.close();
-                        cb();
+                         cb();
                     });
-                });
-                callback()
-         
+                   
+                },callback());
+            
             });
            
-           
-
         }
         getDataForUrl(0, function () {
             console.log(" 1completed");
@@ -166,35 +166,42 @@ module.exports = function (err) {
             let end = parseInt(req.query.end);
             console.log(start, end)
             var arr = [];
-            MongoClient.connect(url, function(err, db) {
+            MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("mydb");
 
-                dbo.collection("agents").find().toArray(function(err, result) {
-                  if (err) throw err;
-                res.send({ res: result, length: result.length })
-                  db.close();
+                dbo.collection("agents").find().toArray(function (err, result) {
+                    if (err) throw err;
+                    for (let i = start; i < end; i++) {
+                        arr.push(result[i]);
+                        if (i === result.length) {
+                            break;
+                        }
+                    }
+                    res.send({ res: arr, length: result.length })
+                    db.close();
+                    callback();
                 });
+                
+            });
 
-              });
-            
-            callback();
+
         }
         getrecords(function (err, data) {
             console.log("finished")
         })
     }
     self.getAllRecords = (req, res) => {
-        MongoClient.connect(url, function(err, db) {
+        MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("mydb");
 
-            dbo.collection("agents").find({}).toArray(function(err, result) {
-              if (err) throw err;
-              res.send(result)
-              db.close();
+            dbo.collection("agents").find({}).toArray(function (err, result) {
+                if (err) throw err;
+                res.send(result)
+                db.close();
             });
-          });
+        });
     }
     return self;
 }();
