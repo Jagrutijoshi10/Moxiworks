@@ -2,10 +2,7 @@
 const request = require('request'),
     _ = require('underscore'),
     async = require("async"),
-    mysql = require('mysql'),
     config = require('../config/config.json'),
-    connection = config.credentials,
-    con = mysql.createPool(connection),
     options = config.option,
     MongoClient = require('mongodb').MongoClient,
     url = "mongodb://localhost:27017/";
@@ -75,7 +72,7 @@ module.exports = function (err) {
                 let parsed_data = JSON.parse(body);
                 // const total_pages = parsed_data.total_pages;
                 // console.log('parsed_data.total_pages:',parsed_data.total_pages);
-                totalpagesInUrl = parsed_data.total_pages;;
+                totalpagesInUrl = parsed_data.total_pages;
                 log = parsed_data["agents"];
                 callback();
             });
@@ -144,15 +141,11 @@ module.exports = function (err) {
                     dbo.collection("agents").insertMany(values, function (err, res) {
                         if (err) throw err;
                         // console.log("Number of documents inserted: " + res.insertedCount);
-                       
                         db.close();
                          cb();
                     });
-                   
                 },callback());
-            
             });
-           
         }
         getDataForUrl(0, function () {
             // console.log(" 1completed");
@@ -169,8 +162,8 @@ module.exports = function (err) {
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("mydb");
-
-                dbo.collection("agents").find().toArray(function (err, result) {
+                var myquery = { moxi_works_id_from_url: moxiWorksAgentId };
+                dbo.collection("agents").find(myquery).toArray(function (err, result) {
                     if (err) throw err;
                     for (let i = start; i < end; i++) {
                         arr.push(result[i]);
@@ -182,10 +175,7 @@ module.exports = function (err) {
                     db.close();
                     callback();
                 });
-                
             });
-
-
         }
         getrecords(function (err, data) {
             // console.log("finished")
