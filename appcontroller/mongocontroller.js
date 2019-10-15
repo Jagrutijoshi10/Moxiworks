@@ -35,10 +35,10 @@ module.exports = function (err) {
                     db.close();
                 });
             });
-        }   
+        }
         sqlStatementsInitial();
 
-      function getDataForUrl(currentPage, callback) {
+        function getDataForUrl(currentPage, callback) {
             // console.log("first");
             if (currentPage <= totalpagesInUrl) {
                 currentPage++;
@@ -52,9 +52,9 @@ module.exports = function (err) {
                 var url = "url";
                 let value = url1 + data;
                 options.url = value;
-                getBodyFromUrl( function (err, data) {
+                getBodyFromUrl(function (err, data) {
                     //  console.log("second callback");
-                    sqlStatements( function (err, data) {
+                    sqlStatements(function (err, data) {
                         // console.log("third callback");
                         getDataForUrl(currentPage, callback);
                     });
@@ -71,16 +71,15 @@ module.exports = function (err) {
                 if (err) throw err;
                 let parsed_data = JSON.parse(body);
                 // const total_pages = parsed_data.total_pages;
-                // console.log('parsed_data.total_pages:',parsed_data.total_pages);
                 totalpagesInUrl = parsed_data.total_pages;
                 log = parsed_data["agents"];
                 callback();
             });
         }
 
-            function sqlStatements(callback) {
+        function sqlStatements(callback) {
             //  console.log("third");
-           
+
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("mydb");
@@ -142,9 +141,9 @@ module.exports = function (err) {
                         if (err) throw err;
                         // console.log("Number of documents inserted: " + res.insertedCount);
                         db.close();
-                         cb();
+                        cb();
                     });
-                },callback());
+                }, callback());
             });
         }
         getDataForUrl(0, function () {
