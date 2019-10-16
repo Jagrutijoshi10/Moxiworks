@@ -34,14 +34,12 @@ export class AppComponent implements OnInit {
         fieldSeparator: ',',
         quoteStrings: '"',
         decimalseparator: '.',
-        showLabels: true, 
+        showLabels: true,
         showTitle: true,
-        title: 'Your title',
+        title: 'Agent List :',
         useBom: true,
         noDownload: false,
-        delimiter:'"',
-        headers: [],
-        nullToEmptyString: true,
+        headers:[]
     };
         // headers: ["MOXI-WORKS AGENT ID", "CLIENT AGENT ID", "MLS AGENT ID", "LICENSE", "MLS NAME", "MLS ABBREVIATION", "MOXI-WORKS OFFICE ID", "OFFICE ID", "CLIENT OFFICE ID", "COMPANY ID", "CLIENT COMPANY ID", "OFFICE ADDRESS STREET", "OFFICE ADDRESS STREET 2", "OFFICE ADDRESS CITY", "OFFICE ADDRESS STATE", "OFFICE ADDRESS ZIP", "NAME", "FIRST NAME", "LAST NAME", "NICKNAME", "MOBILE PHONE NUMBER", "ALT PHONE NUMBER", "FAX PHONE NUMBER", "MAIN PHONE NUMBER", "OFFICE PHONE NUMBER", "PRIMARY EMAIL ID", "SECONDARY EMAIL ADDRESS", "LEAD ROUTING EMAIL ADDRESS", "TITLE", "UUID", "HAS-PRODUCT-ACCESS", "HAS-ENGAGE-ACCESS", "ACCESS LEVEL", "WEBSITE BASE URL", "TWITTER", "GOOGLE PLUS", "FACEBOOK", "INSTAGRAM", "BLOGGER", "YOUTUBE", "LINKED_IN", "PINTEREST", "HOME_PAGE", "PROFILE IMAGE URL", "PROFILE THUMB URL", "REGION", "CREATED_TIMESTAMP", "DEACTIVATED_TIMESTAMP","AGENT ID FROM URL"]
 
@@ -166,10 +164,24 @@ export class AppComponent implements OnInit {
     downloadCSV() {   
         this._http.get(`http://localhost:3000/api/allrecords`).subscribe((dwndata: any) => {
             this.downloadedData = dwndata;
-            console.log(this.downloadedData);
-            this.csvOptions.headers=Object.keys(this.downloadedData[0]);
-            // this.header = Object.keys(this.downloadedData[0]);
-            // console.log("headers are",this.header)
+           
+            // this.csvOptions.headers=Object.keys(this.downloadedData[0]);
+            // let values=[]
+            // for(var i=0;i<this.downloadedData.length;i++){
+            //      values=Object.values(this.downloadedData[i]);
+            //      for(var j=0;j<values.length;j++){
+            //         if(values[j]!=null){
+            //             if(values[j].toString().indexOf(',')>-1){
+            //                 values[j]= values[j].replace(',','&');
+            //                 Object.assign(values[j],this.downloadedData[i][j])
+            //             }
+            //             console.log(this.downloadedData[i].values[j]);
+            //         }
+            //      }
+                      
+            
+            //             }
+                        
             new AngularCsv(this.downloadedData, "agentList", this.csvOptions);
             
          

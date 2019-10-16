@@ -6,6 +6,10 @@ const request = require('request'),
     options = config.option,
     MongoClient = require('mongodb').MongoClient,
     url = "mongodb://localhost:27017/";
+    const json2csv = require('json2csv').parse;
+    const Json2csvParser = require('json2csv').Parser;
+    const { Parser } = require('json2csv');
+const fields =["MOXI-WORKS AGENT ID", "CLIENT AGENT ID", "MLS AGENT ID", "LICENSE", "MLS NAME", "MLS ABBREVIATION", "MOXI-WORKS OFFICE ID", "OFFICE ID", "CLIENT OFFICE ID", "COMPANY ID", "CLIENT COMPANY ID", "OFFICE ADDRESS STREET", "OFFICE ADDRESS STREET 2", "OFFICE ADDRESS CITY", "OFFICE ADDRESS STATE", "OFFICE ADDRESS ZIP", "NAME", "FIRST NAME", "LAST NAME", "NICKNAME", "MOBILE PHONE NUMBER", "ALT PHONE NUMBER", "FAX PHONE NUMBER", "MAIN PHONE NUMBER", "OFFICE PHONE NUMBER", "PRIMARY EMAIL ID", "SECONDARY EMAIL ADDRESS", "LEAD ROUTING EMAIL ADDRESS", "TITLE", "UUID", "HAS-PRODUCT-ACCESS", "HAS-ENGAGE-ACCESS", "ACCESS LEVEL", "WEBSITE BASE URL", "TWITTER", "GOOGLE PLUS", "FACEBOOK", "INSTAGRAM", "BLOGGER", "YOUTUBE", "LINKED_IN", "PINTEREST", "HOME_PAGE", "PROFILE IMAGE URL", "PROFILE THUMB URL", "REGION", "CREATED_TIMESTAMP", "DEACTIVATED_TIMESTAMP","AGENT ID FROM URL"];
 
 
 module.exports = function (err) {
@@ -188,8 +192,23 @@ module.exports = function (err) {
             dbo.collection("agents").find({}).toArray(function (err, result) {
                 if (err) throw err;
                 res.send(result)
+              
+            //     const json2csvParser = new Json2csvParser({ result,delimiter:'\t' });
+            //     const csvData = json2csvParser.parse(result);
+            //     res.setHeader('Content-disposition', 'attachment; filename=customers.csv');
+            // res.set('Content-Type', 'text/csv');
+            // res.status(200).send(csvData);
+
+
+//                 const csvString = json2csv(csv);
+//                 res.setHeader('Content-disposition', 'attachment; filename=shifts-report.csv');
+//                 res.set('Content-Type', 'text/csv');
+//                 res.status(200).send(csvString);
+//                 // console.log(csvString)
+//                 // res.send(csv)
                 db.close();
             });
+
         });
     }
     return self;
