@@ -11,7 +11,7 @@ import {MatSelectModule, matSelectAnimations} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
-
+// import {Angular2CsvModule} from 'angular2-csv'
 @NgModule({
   declarations: [
     AppComponent
@@ -25,6 +25,7 @@ import {MatInputModule} from '@angular/material/input';
     MatFormFieldModule,
     MatTableModule,
     MatInputModule,
+    // Angular2CsvModule,
     ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     Ng2SearchPipeModule,
     BrowserAnimationsModule,

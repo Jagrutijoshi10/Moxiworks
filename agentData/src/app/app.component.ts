@@ -30,6 +30,22 @@ export class AppComponent implements OnInit {
     downloadedData: any;
     filename:any="Agent List";
     displayedColumns: string[] = ['agent id', 'client office id', 'name', 'email id'];
+    csvOptions = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true, 
+        showTitle: true,
+        title: 'Your title',
+        useBom: true,
+        noDownload: false,
+        delimiter:'"',
+        headers: [],
+        nullToEmptyString: true,
+    };
+        // headers: ["MOXI-WORKS AGENT ID", "CLIENT AGENT ID", "MLS AGENT ID", "LICENSE", "MLS NAME", "MLS ABBREVIATION", "MOXI-WORKS OFFICE ID", "OFFICE ID", "CLIENT OFFICE ID", "COMPANY ID", "CLIENT COMPANY ID", "OFFICE ADDRESS STREET", "OFFICE ADDRESS STREET 2", "OFFICE ADDRESS CITY", "OFFICE ADDRESS STATE", "OFFICE ADDRESS ZIP", "NAME", "FIRST NAME", "LAST NAME", "NICKNAME", "MOBILE PHONE NUMBER", "ALT PHONE NUMBER", "FAX PHONE NUMBER", "MAIN PHONE NUMBER", "OFFICE PHONE NUMBER", "PRIMARY EMAIL ID", "SECONDARY EMAIL ADDRESS", "LEAD ROUTING EMAIL ADDRESS", "TITLE", "UUID", "HAS-PRODUCT-ACCESS", "HAS-ENGAGE-ACCESS", "ACCESS LEVEL", "WEBSITE BASE URL", "TWITTER", "GOOGLE PLUS", "FACEBOOK", "INSTAGRAM", "BLOGGER", "YOUTUBE", "LINKED_IN", "PINTEREST", "HOME_PAGE", "PROFILE IMAGE URL", "PROFILE THUMB URL", "REGION", "CREATED_TIMESTAMP", "DEACTIVATED_TIMESTAMP","AGENT ID FROM URL"]
+
+
     // companyId: any = 'moxi_works';
     // pageNumber: any = '1';
     // updatedSince: any = '1461108284';
@@ -63,6 +79,7 @@ export class AppComponent implements OnInit {
             ).subscribe((agent_data: any) => {
                 this.log = agent_data;
                 this.agents = this.log.res;
+                // this.header = Object.keys(agent_data[0]);
                 console.log(this.log);
                 console.log(this.log.length)
                 for (let i = 0; i < Math.ceil(this.log.length / this.limit); i++) {
@@ -150,25 +167,29 @@ export class AppComponent implements OnInit {
         this._http.get(`http://localhost:3000/api/allrecords`).subscribe((dwndata: any) => {
             this.downloadedData = dwndata;
             console.log(this.downloadedData);
-            // new AngularCsv(this.downloadedData, "agentList", this.csvOptions);
-            let replacer = (key, value) => value === null ? '' : value;
-            for(var i=0;i<this.downloadedData.length;i++){
-                  var tit=  this.downloadedData[i].title;
-                if(this.downloadedData[i].title!=null){
-                    if(this.downloadedData[i].title.toString().indexOf(',')>-1){
-                        this.downloadedData[i].title= this.downloadedData[i].title.replace(',',' and ')
-                    }
-                }
+            this.csvOptions.headers=Object.keys(this.downloadedData[0]);
+            // this.header = Object.keys(this.downloadedData[0]);
+            // console.log("headers are",this.header)
+            new AngularCsv(this.downloadedData, "agentList", this.csvOptions);
+            
+         
+    //         let replacer = (key, value) => value === null ? '' : value;
+    //         for(var i=0;i<this.downloadedData.length;i++){
+    //               var tit=  this.downloadedData[i].title;
+    //             if(this.downloadedData[i].title!=null){
+    //                 if(this.downloadedData[i].title.toString().indexOf(',')>-1){
+    //                     this.downloadedData[i].title= this.downloadedData[i].title.replace(',','&')
+    //                 }
+    //             }
+    //             console.log(this.downloadedData[i].title)
 
-            }
-            const header = Object.keys(dwndata[0]);
-            console.log(header)
-
-            let csv = dwndata.map(row => header.map(fieldName => JSON.stringify(row[fieldName],replacer)).join(','));
-            csv.unshift(header.join(','));
-            let csvArray = csv.join('\r\n');
-            var blob = new Blob([csvArray], {type: 'text/csv' })
-            saveAs(blob, this.filename + ".csv");
+    //         }
+    //         const header = Object.keys(dwndata[0]);
+    //         let csv = dwndata.map(row => header.map(fieldName => JSON.stringify(row[fieldName],replacer)).join(','));
+    //         csv.unshift(header.join(','));
+    //         let csvArray = csv.join('\r\n');
+    //         var blob = new Blob([csvArray], {type: 'text/csv' })
+    //         saveAs(blob, this.filename + ".csv");
         });
     }
 
