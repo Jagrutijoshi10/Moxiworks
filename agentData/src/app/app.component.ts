@@ -164,25 +164,36 @@ export class AppComponent implements OnInit {
     downloadCSV() {   
         this._http.get(`http://localhost:3000/api/allrecords`).subscribe((dwndata: any) => {
             this.downloadedData = dwndata;
-           
+    //         for(var i=0;i<this.downloadedData.length;i++){
+    //             this.downloadedData[i]=this.downloadedData[i].replace(',',";")
+    // }
+
+          
             // this.csvOptions.headers=Object.keys(this.downloadedData[0]);
+             
+            // let objdata=[];
+            // let key=[]
             // let values=[]
             // for(var i=0;i<this.downloadedData.length;i++){
+            //     key=Object.keys(this.downloadedData[i]);
             //      values=Object.values(this.downloadedData[i]);
             //      for(var j=0;j<values.length;j++){
             //         if(values[j]!=null){
             //             if(values[j].toString().indexOf(',')>-1){
-            //                 values[j]= values[j].replace(',','&');
-            //                 Object.assign(values[j],this.downloadedData[i][j])
-            //             }
-            //             console.log(this.downloadedData[i].values[j]);
-            //         }
-            //      }
-                      
-            
+            //                 values[j]= values[j].replace(',','');
+            //             // objdata.push(values[i])
             //             }
                         
-            new AngularCsv(this.downloadedData, "agentList", this.csvOptions);
+            //         }
+                   
+            //      }
+            //     //  console.log(values)
+            //      objdata.push(values)
+            //     objdata= Object.assign(values,key)
+            //             }
+            //   new AngularCsv(objdata, "agentList", this.csvOptions);
+            // //  console.log("1",objdata)
+
             
          
     //         let replacer = (key, value) => value === null ? '' : value;
