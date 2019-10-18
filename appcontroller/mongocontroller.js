@@ -5,15 +5,18 @@ const request = require('request'),
     config = require('../config/config.json'),
     options = config.option,
     MongoClient = require('mongodb').MongoClient,
-    url = "mongodb://localhost:27017/";
-    const json2csv = require('json2csv').parse;
-    const Json2csvParser = require('json2csv').Parser;
-    const { Parser } = require('json2csv');
-    const csv=require('fast-csv')
-const fields =["MOXI-WORKS AGENT ID", "CLIENT AGENT ID", "MLS AGENT ID", "LICENSE", "MLS NAME", "MLS ABBREVIATION", "MOXI-WORKS OFFICE ID", "OFFICE ID", "CLIENT OFFICE ID", "COMPANY ID", "CLIENT COMPANY ID", "OFFICE ADDRESS STREET", "OFFICE ADDRESS STREET 2", "OFFICE ADDRESS CITY", "OFFICE ADDRESS STATE", "OFFICE ADDRESS ZIP", "NAME", "FIRST NAME", "LAST NAME", "NICKNAME", "MOBILE PHONE NUMBER", "ALT PHONE NUMBER", "FAX PHONE NUMBER", "MAIN PHONE NUMBER", "OFFICE PHONE NUMBER", "PRIMARY EMAIL ID", "SECONDARY EMAIL ADDRESS", "LEAD ROUTING EMAIL ADDRESS", "TITLE", "UUID", "HAS-PRODUCT-ACCESS", "HAS-ENGAGE-ACCESS", "ACCESS LEVEL", "WEBSITE BASE URL", "TWITTER", "GOOGLE PLUS", "FACEBOOK", "INSTAGRAM", "BLOGGER", "YOUTUBE", "LINKED_IN", "PINTEREST", "HOME_PAGE", "PROFILE IMAGE URL", "PROFILE THUMB URL", "REGION", "CREATED_TIMESTAMP", "DEACTIVATED_TIMESTAMP","AGENT ID FROM URL"];
-const stream = csv.parse()
-const { EOL } = require('os');
-const fs = require('fs');
+    url = "mongodb://localhost:27017/",
+    path = require('path'),
+    json2csv = require('json2csv').parse,
+    Json2csvParser = require('json2csv').Parser,
+    { Parser } = require('json2csv'),
+    csv = require('fast-csv'),
+    stream = csv.parse(),
+    { EOL } = require('os'),
+    fs = require('fs');
+
+
+
 module.exports = function (err) {
     if (err) throw err;
     let self = {};
@@ -76,7 +79,7 @@ module.exports = function (err) {
                 //  console.log("request");
                 if (err) throw err;
                 let parsed_data = JSON.parse(body);
-         console.log(typeof(body))
+                console.log(typeof (body))
 
                 // const total_pages = parsed_data.total_pages;
                 totalpagesInUrl = parsed_data.total_pages;
@@ -196,55 +199,44 @@ module.exports = function (err) {
             dbo.collection("agents").find({}).toArray(function (err, result) {
                 if (err) throw err;
                 res.send(result)
-              
-            //     const json2csvParser = new Json2csvParser({ result,delimiter:'"'});
-            //     const csvData = json2csvParser.parse(result);
-            //     res.setHeader('Content-disposition', 'attachment; filename=customers.csv');
-            // res.set('Content-Type', 'text/csv');
-            // res.status(200).send(csvData);
-        //     result=JSON.stringify(result);
-           
-        //  console.log(typeof(result))
-        // const writestream=createWriteStream('output.txt')
-        // writestream.write(result)
-        // writestream.end();
-        // writestream.on('finish', function() {
-        //     console.log("Write completed.");
-        //  });
-         
-        //  writestream.on('error', function(err) {
-        //     console.log(err.stack);
-        //  });
-      let  newarr=[];
-      let values=[]
-    //    console.log(JSON.stringify(result))
-    // result=JSON.stringify(result)
-    // result=result.replace('{','')
-    // result=result.replace('}','')
-    _.each(result,(i)=>{
-        // console.log(i)
-       
-              values=Object.values(i);
-            newarr.push(values)       
-    })
-        const CSV_STRING = [newarr].join(EOL);
-        // console.log(newarr)
-        const stream = csv.format({headers:true, delimiter: '/n'});
-         stream.pipe(process.stdout);
-        // const stream = csv
-        //     .parse({})
-        //     .on('error', error => console.error(error))
-        //     .on('data', row => console.log(JSON.stringify(row)))
-        //     .on('end', rowCount => console.log(`Parsed ${rowCount} rows`));
-            
-        stream.write(CSV_STRING);
-        stream.end();
-//                 const csvString = json2csv(csv);
-//                 res.setHeader('Content-disposition', 'attachment; filename=shifts-report.csv');
-//                 res.set('Content-Type', 'text/csv');
-//                 res.status(200).send(csvString);
-//                 // console.log(csvString)
-//                 // res.send(csv)
+
+                //     const json2csvParser = new Json2csvParser({ result,delimiter:'"'});
+                //     const csvData = json2csvParser.parse(result);
+                //     res.setHeader('Content-disposition', 'attachment; filename=customers.csv');
+                // res.set('Content-Type', 'text/csv');
+                // res.status(200).send(csvData);
+                //     result=JSON.stringify(result);
+
+                // let values = []
+                // for (var i = 0; i < result.length; i++) {
+                //     values.push(Object.values(result[i]));
+                // }
+                // result = JSON.stringify(result);
+                // result=result.replace(/{/g,'[')
+                // result=result.replace(/}/g,']')
+                // console.log(values)
+                // const CSV_STRING = [values];
+                // const stream = csv.format({headers:true,rowDelimiter:'"' });
+                // stream.pipe(process.stdout);
+                // csv.writeToPath(path.resolve(__dirname, 'row.csv'), CSV_STRING)
+                //     .on('error', err => console.error(err))
+                //     .on('finish', () => console.log('Done writing.'));
+                // const writestream = csv
+                //     .parse({ rowDelimiter: '"' })
+                //     .on('error', error => console.error(error))
+                //     .on('data', row => console.log(row))
+                //     .on('end', rowCount => console.log(`Parsed ${rowCount} rows`));
+
+                // writestream.write(CSV_STRING);
+
+                // stream.end();
+                // res.send(CSV_STRING)
+                //                 const csvString = json2csv(csv);
+                //                 res.setHeader('Content-disposition', 'attachment; filename=shifts-report.csv');
+                //                 res.set('Content-Type', 'text/csv');
+                //                 res.status(200).send(csvString);
+                //                 // console.log(csvString)
+                //                 // res.send(csv)
                 db.close();
             });
 

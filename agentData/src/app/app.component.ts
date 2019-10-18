@@ -5,8 +5,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { switchMap, finalize } from 'rxjs/operators';
 import { AngularCsv } from 'angular7-csv/dist/Angular-csv'
 import * as fileSaver from 'file-saver';
-import 'rxjs/Rx' ;
-import {saveAs} from 'file-saver';
+import 'rxjs/Rx';
+import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'app-root',
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     limit: any = 10;
     selectedLimit: any;
     downloadedData: any;
-    filename:any="Agent List";
+    filename: any = "Agent List";
     displayedColumns: string[] = ['agent id', 'client office id', 'name', 'email id'];
     csvOptions = {
         fieldSeparator: ',',
@@ -39,9 +39,9 @@ export class AppComponent implements OnInit {
         title: 'Agent List :',
         useBom: true,
         noDownload: false,
-        headers:[]
+        headers: []
     };
-        // headers: ["MOXI-WORKS AGENT ID", "CLIENT AGENT ID", "MLS AGENT ID", "LICENSE", "MLS NAME", "MLS ABBREVIATION", "MOXI-WORKS OFFICE ID", "OFFICE ID", "CLIENT OFFICE ID", "COMPANY ID", "CLIENT COMPANY ID", "OFFICE ADDRESS STREET", "OFFICE ADDRESS STREET 2", "OFFICE ADDRESS CITY", "OFFICE ADDRESS STATE", "OFFICE ADDRESS ZIP", "NAME", "FIRST NAME", "LAST NAME", "NICKNAME", "MOBILE PHONE NUMBER", "ALT PHONE NUMBER", "FAX PHONE NUMBER", "MAIN PHONE NUMBER", "OFFICE PHONE NUMBER", "PRIMARY EMAIL ID", "SECONDARY EMAIL ADDRESS", "LEAD ROUTING EMAIL ADDRESS", "TITLE", "UUID", "HAS-PRODUCT-ACCESS", "HAS-ENGAGE-ACCESS", "ACCESS LEVEL", "WEBSITE BASE URL", "TWITTER", "GOOGLE PLUS", "FACEBOOK", "INSTAGRAM", "BLOGGER", "YOUTUBE", "LINKED_IN", "PINTEREST", "HOME_PAGE", "PROFILE IMAGE URL", "PROFILE THUMB URL", "REGION", "CREATED_TIMESTAMP", "DEACTIVATED_TIMESTAMP","AGENT ID FROM URL"]
+    // headers: ["MOXI-WORKS AGENT ID", "CLIENT AGENT ID", "MLS AGENT ID", "LICENSE", "MLS NAME", "MLS ABBREVIATION", "MOXI-WORKS OFFICE ID", "OFFICE ID", "CLIENT OFFICE ID", "COMPANY ID", "CLIENT COMPANY ID", "OFFICE ADDRESS STREET", "OFFICE ADDRESS STREET 2", "OFFICE ADDRESS CITY", "OFFICE ADDRESS STATE", "OFFICE ADDRESS ZIP", "NAME", "FIRST NAME", "LAST NAME", "NICKNAME", "MOBILE PHONE NUMBER", "ALT PHONE NUMBER", "FAX PHONE NUMBER", "MAIN PHONE NUMBER", "OFFICE PHONE NUMBER", "PRIMARY EMAIL ID", "SECONDARY EMAIL ADDRESS", "LEAD ROUTING EMAIL ADDRESS", "TITLE", "UUID", "HAS-PRODUCT-ACCESS", "HAS-ENGAGE-ACCESS", "ACCESS LEVEL", "WEBSITE BASE URL", "TWITTER", "GOOGLE PLUS", "FACEBOOK", "INSTAGRAM", "BLOGGER", "YOUTUBE", "LINKED_IN", "PINTEREST", "HOME_PAGE", "PROFILE IMAGE URL", "PROFILE THUMB URL", "REGION", "CREATED_TIMESTAMP", "DEACTIVATED_TIMESTAMP","AGENT ID FROM URL"]
 
 
     // companyId: any = 'moxi_works';
@@ -84,7 +84,7 @@ export class AppComponent implements OnInit {
                     this.pages.push(i);
                 }
             });
-            }
+    }
     onLimitChange(event) {
         this.spinner.show();
         this.selectedLimit = event.value;
@@ -161,16 +161,13 @@ export class AppComponent implements OnInit {
         this.details = agent;
         this.agentName = this.details.name;
     }
-    downloadCSV() {   
+    downloadCSV() {
         this._http.get(`http://localhost:3000/api/allrecords`).subscribe((dwndata: any) => {
             this.downloadedData = dwndata;
-    //         for(var i=0;i<this.downloadedData.length;i++){
-    //             this.downloadedData[i]=this.downloadedData[i].replace(',',";")
-    // }
+            new AngularCsv(this.downloadedData, "agentList", this.csvOptions);
 
-          
             // this.csvOptions.headers=Object.keys(this.downloadedData[0]);
-             
+
             // let objdata=[];
             // let key=[]
             // let values=[]
@@ -183,38 +180,16 @@ export class AppComponent implements OnInit {
             //                 values[j]= values[j].replace(',','');
             //             // objdata.push(values[i])
             //             }
-                        
+
             //         }
-                   
+
             //      }
             //     //  console.log(values)
             //      objdata.push(values)
             //     objdata= Object.assign(values,key)
-            //             }
-            //   new AngularCsv(objdata, "agentList", this.csvOptions);
-            // //  console.log("1",objdata)
-
-            
-         
-    //         let replacer = (key, value) => value === null ? '' : value;
-    //         for(var i=0;i<this.downloadedData.length;i++){
-    //               var tit=  this.downloadedData[i].title;
-    //             if(this.downloadedData[i].title!=null){
-    //                 if(this.downloadedData[i].title.toString().indexOf(',')>-1){
-    //                     this.downloadedData[i].title= this.downloadedData[i].title.replace(',','&')
-    //                 }
-    //             }
-    //             console.log(this.downloadedData[i].title)
-
-    //         }
-    //         const header = Object.keys(dwndata[0]);
-    //         let csv = dwndata.map(row => header.map(fieldName => JSON.stringify(row[fieldName],replacer)).join(','));
-    //         csv.unshift(header.join(','));
-    //         let csvArray = csv.join('\r\n');
-    //         var blob = new Blob([csvArray], {type: 'text/csv' })
-    //         saveAs(blob, this.filename + ".csv");
+            //             }   
         });
     }
 
-    
+
 }
