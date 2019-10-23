@@ -164,12 +164,11 @@ export class AppComponent implements OnInit {
     downloadCSV() {
         this._http.get(`http://localhost:3000/api/allrecords`).subscribe((dwndata: any) => {
             this.downloadedData = dwndata;
+            this.csvOptions.headers=Object.keys(this.downloadedData[0]);
             new AngularCsv(this.downloadedData, "agentList", this.csvOptions);
 
-            // this.csvOptions.headers=Object.keys(this.downloadedData[0]);
-
-            // let objdata=[];
-            // let key=[]
+            // let objdata={};
+            // let key={}
             // let values=[]
             // for(var i=0;i<this.downloadedData.length;i++){
             //     key=Object.keys(this.downloadedData[i]);
@@ -179,15 +178,15 @@ export class AppComponent implements OnInit {
             //             if(values[j].toString().indexOf(',')>-1){
             //                 values[j]= values[j].replace(',','');
             //             // objdata.push(values[i])
+                      
             //             }
 
             //         }
-
+                   
             //      }
-            //     //  console.log(values)
-            //      objdata.push(values)
-            //     objdata= Object.assign(values,key)
             //             }   
+            //             objdata= JSON.stringify(values)
+            //             console.log(objdata)
         });
     }
 
